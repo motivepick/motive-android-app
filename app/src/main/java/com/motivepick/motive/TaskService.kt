@@ -11,7 +11,7 @@ import retrofit2.http.Query
 interface TaskService {
 
     @GET("/tasks")
-    fun search(@Header("Cookie") token: String, @Query("closed") closed: Boolean): Observable<List<Task>>
+    fun search(@Header("Cookie") cookie: String, @Query("closed") closed: Boolean): Observable<List<Task>>
 
     companion object Factory {
         fun create(): TaskService {

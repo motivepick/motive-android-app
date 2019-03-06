@@ -30,7 +30,6 @@ class TasksActivity : AppCompatActivity() {
 
         val preferences = getSharedPreferences("user", Context.MODE_PRIVATE)
         val token: String = preferences.getString("token", "")!!
-        Log.i("Token", token)
 
         val repository: SearchRepository = SearchRepositoryProvider.provideSearchRepository()
         val subscribe: Disposable = repository.searchTasks("SESSION=" + token, false)

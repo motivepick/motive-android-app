@@ -25,10 +25,6 @@ class EntryActivity : AppCompatActivity() {
     private fun getScreenClassName(): String {
         val preferences = getSharedPreferences("user", Context.MODE_PRIVATE)
         val token: String = preferences.getString("token", "")!!
-        return if (token.isBlank()) {
-            LoginActivity::class.java.name
-        } else {
-            TasksActivity::class.java.name
-        }
+        return if (token.isBlank()) LoginActivity::class.java.name else TasksActivity::class.java.name
     }
 }
