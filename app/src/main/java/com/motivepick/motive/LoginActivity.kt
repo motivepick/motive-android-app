@@ -40,7 +40,7 @@ class LoginActivity : AppCompatActivity() {
             editor.putString("token", token)
             editor.apply()
             finish()
-            startActivity(Intent(this@LoginActivity, TasksActivity::class.java))
+            startActivity(Intent(this@LoginActivity, MainActivity::class.java))
         }
     }
 }
