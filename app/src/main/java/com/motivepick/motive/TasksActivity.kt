@@ -24,7 +24,7 @@ class TasksActivity : AppCompatActivity() {
             editor.remove("token")
             editor.apply()
             finish()
-            val mainActivity = Intent(this@TasksActivity, MainActivity::class.java)
+            val mainActivity = Intent(this@TasksActivity, LoginActivity::class.java)
             startActivity(mainActivity)
         }
 
