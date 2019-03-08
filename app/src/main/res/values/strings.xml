@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Motive</string>
-    <string name="title_home">Tasks</string>
-    <string name="title_dashboard">Schedule</string>
-    <string name="title_notifications">Account</string>
+    <string name="title_tasks">Tasks</string>
+    <string name="title_schedule">Schedule</string>
+    <string name="title_account">Account</string>
 </resources>

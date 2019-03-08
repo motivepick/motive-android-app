@@ -18,15 +18,15 @@ class MainActivity : AppCompatActivity() {
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
-            R.id.navigation_home -> {
+            R.id.navigation_tasks -> {
                 openFragment(TasksFragment.newInstance())
                 return@OnNavigationItemSelectedListener true
             }
-            R.id.navigation_dashboard -> {
+            R.id.navigation_schedule -> {
                 openFragment(ScheduleFragment.newInstance())
                 return@OnNavigationItemSelectedListener true
             }
-            R.id.navigation_notifications -> {
+            R.id.navigation_account -> {
                 openFragment(AccountFragment.newInstance())
                 return@OnNavigationItemSelectedListener true
             }
