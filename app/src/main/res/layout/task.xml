@@ -9,8 +9,7 @@
         android:layout_height="wrap_content" app:srcCompat="@android:drawable/checkbox_off_background" android:id="@+id/item_done" android:layout_weight="1"
         android:adjustViewBounds="false"/>
     <TextView
-        android:text="TextView"
         android:layout_width="wrap_content"
-        android:id="@+id/item_text" android:layout_weight="48" android:layout_height="38dp" android:gravity="left|center_vertical"
+        android:id="@+id/item_text" android:layout_weight="48" android:layout_height="38dp" android:gravity="start|center_vertical"
         android:textSize="24sp"/>
 </LinearLayout>

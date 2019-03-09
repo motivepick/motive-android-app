@@ -4,7 +4,5 @@ import io.reactivex.Observable
 
 class SearchRepository(private val service: TaskService) {
 
-    fun searchTasks(token: String, closed: Boolean): Observable<List<Task>> {
-        return service.search(token, closed)
-    }
+    fun searchTasks(token: String, closed: Boolean): Observable<List<Task>> = service.search(token, closed)
 }

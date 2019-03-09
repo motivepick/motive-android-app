@@ -1,3 +1,5 @@
 package com.motivepick.motive
 
-data class TaskViewItem(val name: String)
+import java.io.Serializable
+
+data class TaskViewItem(val id: Long, val name: String, val description: String) : Serializable

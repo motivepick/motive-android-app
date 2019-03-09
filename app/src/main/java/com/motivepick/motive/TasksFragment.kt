@@ -1,6 +1,7 @@
 package com.motivepick.motive
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -28,7 +29,11 @@ class TasksFragment : Fragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe({ tasks ->
-                tasksRecyclerView.adapter = TasksAdapter(tasks.map { TaskViewItem(it.name) })
+                tasksRecyclerView.adapter = TasksAdapter(tasks.map { TaskViewItem(it.id, it.name, it.description ?: "") }) {
+                    val intent = Intent(activity, TaskEditActivity::class.java)
+                    intent.putExtra("task", it)
+                    startActivity(intent)
+                }
             }, { error ->
                 Log.e("Tasks", "Error happened $error")
             })
