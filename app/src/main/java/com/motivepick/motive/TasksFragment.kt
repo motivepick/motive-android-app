@@ -3,11 +3,12 @@ package com.motivepick.motive
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -19,13 +20,15 @@ class TasksFragment : Fragment() {
         val preferences = activity!!.getSharedPreferences("user", Context.MODE_PRIVATE)
         val token: String = preferences.getString("token", "")!!
 
+        val tasksRecyclerView: RecyclerView = view.findViewById(R.id.tasksRecyclerView)
+        tasksRecyclerView.layoutManager = LinearLayoutManager(activity)
+
         val repository: SearchRepository = SearchRepositoryProvider.provideSearchRepository()
         val subscribe: Disposable = repository.searchTasks("SESSION=" + token, false)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe({ tasks ->
-                val textView: TextView = view.findViewById(R.id.textView)
-                textView.text = "There are ${tasks.size} tasks"
+                tasksRecyclerView.adapter = TasksAdapter(tasks.map { TaskViewItem(it.name) })
             }, { error ->
                 Log.e("Tasks", "Error happened $error")
             })
