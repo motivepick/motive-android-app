@@ -38,8 +38,8 @@ class TaskEditActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
         if (item.itemId == R.id.deleteTaskMenuItem) {
             val task: TaskViewItem = intent.extras!!.get("task") as TaskViewItem
-            val token: String = TokenService(this).getToken()
-            val repository: TaskRepository = SearchRepositoryProvider.provideSearchRepository()
+            val token: String = TokenStorage(this).getToken()
+            val repository: TaskRepository = TaskRepositoryFactory.create()
             repository.deleteTask(token, task.id)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())

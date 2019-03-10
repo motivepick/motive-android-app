@@ -32,9 +32,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun handleIntent(intent: Intent) {
         if (intent.action == Intent.ACTION_VIEW) {
-            val url: String = intent.data!!.toString()
-            val token = url.replace("motive://", "").replace("#_=_", "")
-            TokenService(this).storeToken(token)
+            TokenStorage(this).storeToken(Token(intent.data).toString())
             finish()
             startActivity(Intent(this@LoginActivity, MainActivity::class.java))
         }

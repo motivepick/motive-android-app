@@ -14,7 +14,7 @@ class AccountFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_account, container, false)
         val logoutButton: Button = view.findViewById(R.id.logoutButton)
         logoutButton.setOnClickListener {
-            TokenService(activity).removeToken()
+            TokenStorage(activity).removeToken()
             startActivity(Intent(activity, LoginActivity::class.java))
         }
         return view

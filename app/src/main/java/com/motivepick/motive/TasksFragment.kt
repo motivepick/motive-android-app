@@ -24,8 +24,8 @@ class TasksFragment : Fragment() {
     @SuppressLint("CheckResult")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_tasks, container, false)
-        val token: String = TokenService(activity).getToken()
-        val repository: TaskRepository = SearchRepositoryProvider.provideSearchRepository()
+        val token: String = TokenStorage(activity).getToken()
+        val repository: TaskRepository = TaskRepositoryFactory.create()
 
         val taskNameEditText: EditText = view.findViewById(R.id.taskNameEditText) as EditText
         taskNameEditText.setOnEditorActionListener { textView, actionId, event ->
