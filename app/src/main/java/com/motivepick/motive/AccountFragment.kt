@@ -1,8 +1,6 @@
 package com.motivepick.motive
 
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -16,9 +14,7 @@ class AccountFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_account, container, false)
         val logoutButton: Button = view.findViewById(R.id.logoutButton)
         logoutButton.setOnClickListener {
-            val editor: SharedPreferences.Editor = activity!!.getSharedPreferences("user", Context.MODE_PRIVATE).edit()
-            editor.remove("token")
-            editor.apply()
+            TokenService(activity).removeToken()
             startActivity(Intent(activity, LoginActivity::class.java))
         }
         return view

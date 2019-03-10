@@ -2,7 +2,7 @@ package com.motivepick.motive
 
 object SearchRepositoryProvider {
 
-    fun provideSearchRepository(): SearchRepository {
-        return SearchRepository(TaskService.create())
+    fun provideSearchRepository(): TaskRepository {
+        return TaskRepository(TaskService.create())
     }
 }

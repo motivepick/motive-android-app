@@ -1,6 +1,5 @@
 package com.motivepick.motive
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -23,8 +22,7 @@ class EntryActivity : AppCompatActivity() {
     }
 
     private fun getScreenClassName(): String {
-        val preferences = getSharedPreferences("user", Context.MODE_PRIVATE)
-        val token: String = preferences.getString("token", "")!!
+        val token: String = TokenService(this).getToken()
         return if (token.isBlank()) LoginActivity::class.java.name else MainActivity::class.java.name
     }
 }

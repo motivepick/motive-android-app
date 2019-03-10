@@ -1,8 +1,6 @@
 package com.motivepick.motive
 
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -36,9 +34,7 @@ class LoginActivity : AppCompatActivity() {
         if (intent.action == Intent.ACTION_VIEW) {
             val url: String = intent.data!!.toString()
             val token = url.replace("motive://", "").replace("#_=_", "")
-            val editor: SharedPreferences.Editor = getSharedPreferences("user", Context.MODE_PRIVATE).edit()
-            editor.putString("token", token)
-            editor.apply()
+            TokenService(this).storeToken(token)
             finish()
             startActivity(Intent(this@LoginActivity, MainActivity::class.java))
         }
