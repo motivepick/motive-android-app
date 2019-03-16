@@ -17,12 +17,18 @@ interface TaskService {
     @DELETE("/tasks/{id}")
     fun delete(@Header("Cookie") cookie: String, @Path("id") id: Long): Observable<Unit>
 
+    @PUT("/tasks/{id}/closing")
+    fun close(@Header("Cookie") cookie: String, @Path("id") id: Long): Observable<Task>
+
+    @PUT("/tasks/{id}/undo-closing")
+    fun undoClose(@Header("Cookie") cookie: String, @Path("id") id: Long): Observable<Task>
+
     companion object Factory {
-        fun create(): TaskService {
+        fun create(config: Config): TaskService {
             val retrofit = Retrofit.Builder()
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl("https://api.motivepick.com")
+                .baseUrl(config.getApiUrl())
                 .build()
 
             return retrofit.create(TaskService::class.java);

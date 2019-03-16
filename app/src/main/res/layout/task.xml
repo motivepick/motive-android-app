@@ -6,7 +6,7 @@
 
     <ImageButton
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" app:srcCompat="@android:drawable/checkbox_off_background" android:id="@+id/item_done" android:layout_weight="1"
+        android:layout_height="wrap_content" app:srcCompat="@android:drawable/checkbox_off_background" android:id="@+id/closeTaskBtn" android:layout_weight="1"
         android:adjustViewBounds="false"/>
     <TextView
         android:layout_width="wrap_content"

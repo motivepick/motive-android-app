@@ -21,8 +21,6 @@ class EntryActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun getScreenClassName(): String {
-        val token: String = TokenStorage(this).getToken()
-        return if (token.isBlank()) LoginActivity::class.java.name else MainActivity::class.java.name
-    }
+    private fun getScreenClassName(): String =
+        if (TokenStorage(this).getToken().isBlank()) LoginActivity::class.java.name else MainActivity::class.java.name
 }

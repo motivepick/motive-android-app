@@ -4,11 +4,13 @@ import io.reactivex.Observable
 
 class TaskRepository(private val service: TaskService) {
 
-    fun searchTasks(token: String, closed: Boolean): Observable<List<Task>> = service.search(cookie(token), closed)
+    fun searchTasks(token: Token, closed: Boolean): Observable<List<Task>> = service.search(token.toCookie(), closed)
 
-    fun createTask(token: String, task: Task): Observable<Task> = service.create(cookie(token), task)
+    fun createTask(token: Token, task: Task): Observable<Task> = service.create(token.toCookie(), task)
 
-    fun deleteTask(token: String, id: Long) = service.delete(cookie(token), id)
+    fun closeTask(token: Token, id: Long): Observable<Task> = service.close(token.toCookie(), id)
 
-    private fun cookie(token: String) = "SESSION=$token"
+    fun undoCloseTask(token: Token, id: Long): Observable<Task> = service.undoClose(token.toCookie(), id)
+
+    fun deleteTask(token: Token, id: Long) = service.delete(token.toCookie(), id)
 }

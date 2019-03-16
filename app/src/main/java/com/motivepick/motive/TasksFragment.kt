@@ -24,8 +24,8 @@ class TasksFragment : Fragment() {
     @SuppressLint("CheckResult")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_tasks, container, false)
-        val token: String = TokenStorage(activity).getToken()
-        val repository: TaskRepository = TaskRepositoryFactory.create()
+        val token: Token = TokenStorage(activity).getToken()
+        val repository: TaskRepository = TaskRepositoryFactory.create(Config(activity!!))
 
         val taskNameEditText: EditText = view.findViewById(R.id.taskNameEditText) as EditText
         taskNameEditText.setOnEditorActionListener { textView, actionId, event ->
@@ -33,7 +33,10 @@ class TasksFragment : Fragment() {
                 repository.createTask(token, Task(null, textView.text.toString(), null))
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
-                    .subscribe({ task -> Log.i("Tasks", "Task created " + task.id) }, { error -> Log.e("Tasks", "Error happened $error") })
+                    .subscribe({ task ->
+                        Log.i("Tasks", "Task created " + task.id)
+                        textView.text = ""
+                    }, { error -> Log.e("Tasks", "Error happened $error") })
                 val manager = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 manager.hideSoftInputFromWindow(view.windowToken, 0)
                 true
@@ -41,6 +44,11 @@ class TasksFragment : Fragment() {
                 false
             }
         }
+
+//        val closeTaskBtn: ImageButton = view.findViewById(R.id.closeTaskBtn)
+//        closeTaskBtn.setOnClickListener({ view ->
+//            repository.closeTask(token, 0L) // TODO
+//        })
 
         val tasksRecyclerView: RecyclerView = view.findViewById(R.id.tasksRecyclerView)
         tasksRecyclerView.layoutManager = LinearLayoutManager(activity)

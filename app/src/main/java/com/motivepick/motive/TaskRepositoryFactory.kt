@@ -2,7 +2,7 @@ package com.motivepick.motive
 
 object TaskRepositoryFactory {
 
-    fun create(): TaskRepository {
-        return TaskRepository(TaskService.create())
+    fun create(config: Config): TaskRepository {
+        return TaskRepository(TaskService.create(config))
     }
 }

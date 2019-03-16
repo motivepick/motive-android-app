@@ -6,13 +6,13 @@ import android.content.SharedPreferences.Editor
 
 class TokenStorage(private val context: Context?) {
 
-    fun storeToken(token: String) {
+    fun storeToken(token: Token) {
         val editor: Editor = preferencesFromContext().edit()
-        editor.putString("token", token)
+        editor.putString("token", token.toString())
         editor.apply()
     }
 
-    fun getToken(): String = preferencesFromContext().getString("token", "")!!
+    fun getToken(): Token = Token(preferencesFromContext().getString("token", "")!!)
 
     fun removeToken() {
         val editor: Editor = preferencesFromContext().edit()
