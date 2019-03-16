@@ -40,6 +40,7 @@ class TasksFragment : Fragment() {
                     .subscribe({ task ->
                         (tasksRecyclerView.adapter as TasksAdapter).handleTaskCreateSuccess(viewItemFor(task))
                         textView.text = ""
+                        tasksRecyclerView.scrollToPosition(0)
                     }, { Log.e("Tasks", "Error happened $it") })
                 val manager = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 manager.hideSoftInputFromWindow(view.windowToken, 0)
