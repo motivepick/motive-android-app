@@ -1,6 +1,7 @@
 package com.motivepick.motive
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -44,8 +45,10 @@ class TaskEditActivity : AppCompatActivity() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe({
+                    val returnIntent = Intent(this@TaskEditActivity, MainActivity::class.java)
+                    returnIntent.putExtra("deletedTaskId", task.id)
+                    setResult(RESULT_OK, returnIntent)
                     finish()
-                    startActivity(android.content.Intent(this@TaskEditActivity, MainActivity::class.java))
                 }, { error -> Log.e("Tasks", "Error happened $error") })
             true
         } else {

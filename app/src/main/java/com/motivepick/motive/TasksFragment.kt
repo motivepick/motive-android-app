@@ -1,6 +1,7 @@
 package com.motivepick.motive
 
 import android.annotation.SuppressLint
+import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -27,6 +28,9 @@ class TasksFragment : Fragment() {
         val token: Token = TokenStorage(activity).getToken()
         val repository: TaskRepository = TaskRepositoryFactory.create(Config(activity!!))
 
+        val tasksRecyclerView: RecyclerView = view.findViewById(R.id.tasksRecyclerView)
+        tasksRecyclerView.layoutManager = LinearLayoutManager(activity)
+
         val taskNameEditText: EditText = view.findViewById(R.id.taskNameEditText) as EditText
         taskNameEditText.setOnEditorActionListener { textView, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE || (actionId == EditorInfo.IME_ACTION_UNSPECIFIED && event.action == KeyEvent.ACTION_DOWN)) {
@@ -34,9 +38,9 @@ class TasksFragment : Fragment() {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
                     .subscribe({ task ->
-                        Log.i("Tasks", "Task created " + task.id)
+                        (tasksRecyclerView.adapter as TasksAdapter).handleTaskCreateSuccess(viewItemFor(task))
                         textView.text = ""
-                    }, { error -> Log.e("Tasks", "Error happened $error") })
+                    }, { Log.e("Tasks", "Error happened $it") })
                 val manager = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 manager.hideSoftInputFromWindow(view.windowToken, 0)
                 true
@@ -45,27 +49,45 @@ class TasksFragment : Fragment() {
             }
         }
 
-//        val closeTaskBtn: ImageButton = view.findViewById(R.id.closeTaskBtn)
-//        closeTaskBtn.setOnClickListener({ view ->
-//            repository.closeTask(token, 0L) // TODO
-//        })
-
-        val tasksRecyclerView: RecyclerView = view.findViewById(R.id.tasksRecyclerView)
-        tasksRecyclerView.layoutManager = LinearLayoutManager(activity)
-
         repository.searchTasks(token, false)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe({ tasks ->
-                tasksRecyclerView.adapter = TasksAdapter(tasks.map { TaskViewItem(it.id!!, it.name, it.description ?: "") }) {
-                    val intent = Intent(activity, TaskEditActivity::class.java)
-                    intent.putExtra("task", it)
-                    startActivity(intent)
-                }
-            }, { error ->
-                Log.e("Tasks", "Error happened $error")
-            })
+                tasksRecyclerView.adapter = TasksAdapter(tasks.map(::viewItemFor), {
+                    handleTaskClose(token, repository, it) { id ->
+                        (tasksRecyclerView.adapter as TasksAdapter).handleTaskCloseSuccess(id)
+                    }
+                }, ::handleTaskClick)
+            }, { Log.e("Tasks", "Error happened $it") })
         return view
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            val tasksRecyclerView: RecyclerView = activity!!.findViewById(R.id.tasksRecyclerView)
+            val id: Long = data!!.getLongExtra("deletedTaskId", Long.MIN_VALUE)
+            if (id != Long.MIN_VALUE) {
+                (tasksRecyclerView.adapter as TasksAdapter).handleTaskDeleteSuccess(id)
+            }
+        }
+    }
+
+    private fun viewItemFor(task: Task) = TaskViewItem(task.id!!, task.name, task.description ?: "")
+
+    @SuppressLint("CheckResult")
+    private fun handleTaskClose(token: Token, repository: TaskRepository, item: TaskViewItem, onSuccess: (Long) -> Unit) {
+        repository.closeTask(token, item.id)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe({ task -> onSuccess(task.id!!) }, { Log.e("Tasks", "Error happened $it") })
+    }
+
+    private fun handleTaskClick(task: TaskViewItem) {
+        val intent = Intent(activity, TaskEditActivity::class.java)
+        intent.putExtra("task", task)
+        startActivityForResult(intent, 1)
     }
 
     companion object {
