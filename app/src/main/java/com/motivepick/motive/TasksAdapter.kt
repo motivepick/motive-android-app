@@ -30,7 +30,13 @@ class TasksAdapter(private var tasks: List<TaskViewItem>, private val onTaskClos
         notifyItemInserted(0)
     }
 
-    fun handleTaskCloseSuccess(id: Long) = deleteTask(id)
+    fun handleTaskCloseSuccess(task: TaskViewItem) {
+        if (task.closed) {
+            deleteTask(task.id)
+        } else {
+            handleTaskCreateSuccess(task)
+        }
+    }
 
     fun handleTaskDeleteSuccess(id: Long) = deleteTask(id)
 

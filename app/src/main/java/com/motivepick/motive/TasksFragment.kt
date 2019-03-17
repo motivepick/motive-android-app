@@ -22,6 +22,8 @@ import io.reactivex.schedulers.Schedulers
 
 class TasksFragment : Fragment() {
 
+    val TASK_EDIT_ACTICITY_REQUEST_CODE = 1
+
     @SuppressLint("CheckResult")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_tasks, container, false)
@@ -34,11 +36,11 @@ class TasksFragment : Fragment() {
         val taskNameEditText: EditText = view.findViewById(R.id.taskNameEditText) as EditText
         taskNameEditText.setOnEditorActionListener { textView, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE || (actionId == EditorInfo.IME_ACTION_UNSPECIFIED && event.action == KeyEvent.ACTION_DOWN)) {
-                repository.createTask(token, Task(null, textView.text.toString(), null))
+                repository.createTask(token, Task(null, textView.text.toString(), null, false))
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
                     .subscribe({ task ->
-                        (tasksRecyclerView.adapter as TasksAdapter).handleTaskCreateSuccess(viewItemFor(task))
+                        (tasksRecyclerView.adapter as TasksAdapter).handleTaskCreateSuccess(TaskViewItem.createFrom(task))
                         textView.text = ""
                         tasksRecyclerView.scrollToPosition(0)
                     }, { Log.e("Tasks", "Error happened $it") })
@@ -54,19 +56,18 @@ class TasksFragment : Fragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe({ tasks ->
-                tasksRecyclerView.adapter = TasksAdapter(tasks.map(::viewItemFor), {
-                    handleTaskClose(token, repository, it) { id ->
-                        (tasksRecyclerView.adapter as TasksAdapter).handleTaskCloseSuccess(id)
+                tasksRecyclerView.adapter = TasksAdapter(tasks.map { TaskViewItem.createFrom(it) }, {
+                    handleTaskClose(token, repository, it) { taskViewItem ->
+                        (tasksRecyclerView.adapter as TasksAdapter).handleTaskCloseSuccess(taskViewItem)
                     }
                 }, ::handleTaskClick)
             }, { Log.e("Tasks", "Error happened $it") })
         return view
     }
 
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 1 && resultCode == RESULT_OK) {
+        if (requestCode == TASK_EDIT_ACTICITY_REQUEST_CODE && resultCode == RESULT_OK) {
             val tasksRecyclerView: RecyclerView = activity!!.findViewById(R.id.tasksRecyclerView)
             val id: Long = data!!.getLongExtra("deletedTaskId", Long.MIN_VALUE)
             if (id != Long.MIN_VALUE) {
@@ -75,20 +76,18 @@ class TasksFragment : Fragment() {
         }
     }
 
-    private fun viewItemFor(task: Task) = TaskViewItem(task.id!!, task.name, task.description ?: "")
-
     @SuppressLint("CheckResult")
-    private fun handleTaskClose(token: Token, repository: TaskRepository, item: TaskViewItem, onSuccess: (Long) -> Unit) {
-        repository.closeTask(token, item.id)
+    private fun handleTaskClose(token: Token, repository: TaskRepository, item: TaskViewItem, onSuccess: (TaskViewItem) -> Unit) {
+        if (item.closed) repository.undoCloseTask(token, item.id) else repository.closeTask(token, item.id)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe({ task -> onSuccess(task.id!!) }, { Log.e("Tasks", "Error happened $it") })
+            .subscribe({ task -> onSuccess(TaskViewItem.createFrom(task)) }, { Log.e("Tasks", "Error happened $it") })
     }
 
     private fun handleTaskClick(task: TaskViewItem) {
         val intent = Intent(activity, TaskEditActivity::class.java)
         intent.putExtra("task", task)
-        startActivityForResult(intent, 1)
+        startActivityForResult(intent, TASK_EDIT_ACTICITY_REQUEST_CODE)
     }
 
     companion object {

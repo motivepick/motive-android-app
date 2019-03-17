@@ -8,6 +8,8 @@ class TaskRepository(private val service: TaskService) {
 
     fun createTask(token: Token, task: Task): Observable<Task> = service.create(token.toCookie(), task)
 
+    fun updateTask(token: Token, task: Task): Observable<Task> = service.update(token.toCookie(), task)
+
     fun closeTask(token: Token, id: Long): Observable<Task> = service.close(token.toCookie(), id)
 
     fun undoCloseTask(token: Token, id: Long): Observable<Task> = service.undoClose(token.toCookie(), id)
