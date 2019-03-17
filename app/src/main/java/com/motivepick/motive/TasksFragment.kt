@@ -34,14 +34,16 @@ class TasksFragment : Fragment() {
         val taskNameEditText: EditText = view.findViewById(R.id.taskNameEditText) as EditText
         taskNameEditText.setOnEditorActionListener { textView, actionId, event ->
             if (Keyboard.enterPressed(actionId, event)) {
-                repository.createTask(token, Task(null, textView.text.toString(), null, false))
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())
-                    .subscribe({ task ->
-                        (tasksRecyclerView.adapter as TasksAdapter).handleTaskCreateSuccess(TaskViewItem.from(task))
-                        textView.text = ""
-                        tasksRecyclerView.scrollToPosition(0)
-                    }, { Log.e("Tasks", "Error happened $it") })
+                if (textView.text.isNotBlank()) {
+                    repository.createTask(token, Task(null, textView.text.toString(), null, false))
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(Schedulers.io())
+                        .subscribe({ task ->
+                            (tasksRecyclerView.adapter as TasksAdapter).handleTaskCreateSuccess(TaskViewItem.from(task))
+                            textView.text = ""
+                            tasksRecyclerView.scrollToPosition(0)
+                        }, { Log.e("Tasks", "Error happened $it") })
+                }
                 val manager = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 manager.hideSoftInputFromWindow(view.windowToken, 0)
                 true
