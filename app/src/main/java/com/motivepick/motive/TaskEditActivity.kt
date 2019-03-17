@@ -1,26 +1,52 @@
 package com.motivepick.motive
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 class TaskEditActivity : AppCompatActivity() {
 
+    @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         setContentView(R.layout.activity_task_edit)
 
+        val view: View = findViewById(android.R.id.content)
+        val token: Token = TokenStorage(this).getToken()
+        val repository: TaskRepository = TaskRepositoryFactory.create(Config(this))
+
         val task: TaskViewItem = intent.extras!!.get("task") as TaskViewItem
         val taskName: TextView = findViewById(R.id.taskName)
         taskName.text = task.name
+        taskName.setOnEditorActionListener { textView, actionId, event ->
+            if (Keyboard.enterPressed(actionId, event)) {
+                repository.updateTask(token, task.id, UpdateTaskRequest(textView.text.toString()))
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe({ task ->
+                        val returnIntent = Intent(this@TaskEditActivity, MainActivity::class.java)
+                        returnIntent.putExtra("updatedTask", TaskViewItem.from(task))
+                        setResult(RESULT_OK, returnIntent)
+                    }, { Log.e("Tasks", "Error happened $it") })
+                val manager = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                manager.hideSoftInputFromWindow(view.windowToken, 0)
+                true
+            } else {
+                false
+            }
+        }
+
         val taskDescription: TextView = findViewById(R.id.taskDescription)
         taskDescription.text = task.description
     }

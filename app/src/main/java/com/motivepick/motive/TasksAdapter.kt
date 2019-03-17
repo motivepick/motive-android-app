@@ -40,6 +40,13 @@ class TasksAdapter(private var tasks: List<TaskViewItem>, private val onTaskClos
 
     fun handleTaskDeleteSuccess(id: Long) = deleteTask(id)
 
+    fun handleTaskUpdateSuccess(updated: TaskViewItem) {
+        val left: List<TaskViewItem> = tasks.takeWhile { it.id != updated.id }
+        val right: List<TaskViewItem> = tasks.takeLastWhile { it.id != updated.id }
+        tasks = left + listOf(updated) + right
+        notifyItemChanged(left.size)
+    }
+
     private fun deleteTask(id: Long) {
         val task: TaskViewItem = tasks.find { it.id == id }!!
         val position = tasks.indexOf(task)

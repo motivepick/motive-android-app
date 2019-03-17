@@ -9,11 +9,9 @@ import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -35,12 +33,12 @@ class TasksFragment : Fragment() {
 
         val taskNameEditText: EditText = view.findViewById(R.id.taskNameEditText) as EditText
         taskNameEditText.setOnEditorActionListener { textView, actionId, event ->
-            if (actionId == EditorInfo.IME_ACTION_DONE || (actionId == EditorInfo.IME_ACTION_UNSPECIFIED && event.action == KeyEvent.ACTION_DOWN)) {
+            if (Keyboard.enterPressed(actionId, event)) {
                 repository.createTask(token, Task(null, textView.text.toString(), null, false))
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
                     .subscribe({ task ->
-                        (tasksRecyclerView.adapter as TasksAdapter).handleTaskCreateSuccess(TaskViewItem.createFrom(task))
+                        (tasksRecyclerView.adapter as TasksAdapter).handleTaskCreateSuccess(TaskViewItem.from(task))
                         textView.text = ""
                         tasksRecyclerView.scrollToPosition(0)
                     }, { Log.e("Tasks", "Error happened $it") })
@@ -56,7 +54,7 @@ class TasksFragment : Fragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe({ tasks ->
-                tasksRecyclerView.adapter = TasksAdapter(tasks.map { TaskViewItem.createFrom(it) }, {
+                tasksRecyclerView.adapter = TasksAdapter(tasks.map { TaskViewItem.from(it) }, {
                     handleTaskClose(token, repository, it) { taskViewItem ->
                         (tasksRecyclerView.adapter as TasksAdapter).handleTaskCloseSuccess(taskViewItem)
                     }
@@ -72,6 +70,9 @@ class TasksFragment : Fragment() {
             val id: Long = data!!.getLongExtra("deletedTaskId", Long.MIN_VALUE)
             if (id != Long.MIN_VALUE) {
                 (tasksRecyclerView.adapter as TasksAdapter).handleTaskDeleteSuccess(id)
+            } else {
+                val updatedTask: TaskViewItem = data.getSerializableExtra("updatedTask") as TaskViewItem
+                (tasksRecyclerView.adapter as TasksAdapter).handleTaskUpdateSuccess(updatedTask)
             }
         }
     }
@@ -81,7 +82,7 @@ class TasksFragment : Fragment() {
         if (item.closed) repository.undoCloseTask(token, item.id) else repository.closeTask(token, item.id)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe({ task -> onSuccess(TaskViewItem.createFrom(task)) }, { Log.e("Tasks", "Error happened $it") })
+            .subscribe({ task -> onSuccess(TaskViewItem.from(task)) }, { Log.e("Tasks", "Error happened $it") })
     }
 
     private fun handleTaskClick(task: TaskViewItem) {

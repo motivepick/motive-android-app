@@ -15,7 +15,7 @@ interface TaskService {
     fun create(@Header("Cookie") cookie: String, @Body task: Task): Observable<Task>
 
     @PUT("/tasks/{id}")
-    fun update(@Header("Cookie") cookie: String, @Body task: Task): Observable<Task>
+    fun update(@Header("Cookie") cookie: String, @Path("id") id: Long, @Body request: UpdateTaskRequest): Observable<Task>
 
     @DELETE("/tasks/{id}")
     fun delete(@Header("Cookie") cookie: String, @Path("id") id: Long): Observable<Unit>
