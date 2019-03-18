@@ -12,6 +12,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.TextView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -71,6 +72,17 @@ class TaskEditActivity : AppCompatActivity() {
 
         dueDate.setOnClickListener {
             DatePickerDialog(this, onDateSetListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show()
+        }
+
+        val deleteDueDate: Button = findViewById(R.id.button)
+        deleteDueDate.setOnClickListener {
+            repository.updateTask(token, task!!.id, UpdateTaskRequest(true))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe({
+                    this.task = TaskViewItem(this.task!!.id, this.task!!.name, this.task!!.description, null, this.task!!.closed)
+                    dueDate.text = ""
+                }, { Log.e("Tasks", "Error happened $it") })
         }
 
         val taskDescription: TextView = findViewById(R.id.textView)
