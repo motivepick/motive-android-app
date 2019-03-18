@@ -35,7 +35,7 @@ class TasksFragment : Fragment() {
         taskNameEditText.setOnEditorActionListener { textView, actionId, event ->
             if (Keyboard.enterPressed(actionId, event)) {
                 if (textView.text.isNotBlank()) {
-                    repository.createTask(token, Task(null, textView.text.toString(), null, false))
+                    repository.createTask(token, Task(null, textView.text.toString(), null, null, false))
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeOn(Schedulers.io())
                         .subscribe({ task ->

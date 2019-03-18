@@ -5,7 +5,7 @@
     <item
         android:id="@+id/deleteTaskMenuItem"
         android:icon="@drawable/ic_home_black_24dp"
-        android:title="Delete task"
+        android:title="@string/menu_delete_task"
         app:showAsAction="always"
         android:orderInCategory="0"/>
 

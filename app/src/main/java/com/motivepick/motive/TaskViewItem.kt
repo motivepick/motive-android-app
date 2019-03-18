@@ -1,10 +1,11 @@
 package com.motivepick.motive
 
 import java.io.Serializable
+import java.util.*
 
-data class TaskViewItem(val id: Long, val name: String, val description: String, val closed: Boolean) : Serializable {
+data class TaskViewItem(val id: Long, val name: String, val description: String, val dueDate: Date?, val closed: Boolean) : Serializable {
 
     companion object {
-        fun from(task: Task): TaskViewItem = TaskViewItem(task.id!!, task.name, task.description ?: "", task.closed)
+        fun from(task: Task): TaskViewItem = TaskViewItem(task.id!!, task.name, task.description ?: "", task.dueDate, task.closed)
     }
 }

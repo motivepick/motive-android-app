@@ -1,5 +1,6 @@
 package com.motivepick.motive
 
+import com.google.gson.GsonBuilder
 import io.reactivex.Observable
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -30,7 +31,7 @@ interface TaskService {
         fun create(config: Config): TaskService {
             val retrofit = Retrofit.Builder()
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS").create()))
                 .baseUrl(config.getApiUrl())
                 .build()
 

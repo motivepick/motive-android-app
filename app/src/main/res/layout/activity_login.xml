@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".LoginActivity">
-    <Button android:text="Login With VK"
+    <Button android:text="@string/button_login_with_vk"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/loginVkButton"
@@ -14,7 +14,7 @@
         app:layout_constraintEnd_toStartOf="@+id/loginFacebookButton" app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="13dp"
         android:layout_marginStart="13dp" app:layout_constraintBottom_toBottomOf="parent"/>
-    <Button android:text="Login With Facebook"
+    <Button android:text="@string/button_login_with_facebook"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/loginFacebookButton"
