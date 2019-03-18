@@ -1,6 +1,7 @@
 package com.motivepick.motive
 
 import android.annotation.SuppressLint
+import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -13,8 +14,13 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import java.text.SimpleDateFormat
+import java.util.*
+
 
 class TaskEditActivity : AppCompatActivity() {
+
+    val calendar: Calendar = Calendar.getInstance();
 
     @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,8 +53,32 @@ class TaskEditActivity : AppCompatActivity() {
             }
         }
 
-        val taskDescription: TextView = findViewById(R.id.taskDescription)
+        val dueDate: TextView = findViewById(R.id.editText2)
+
+        val date = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
+            calendar.set(Calendar.YEAR, year)
+            calendar.set(Calendar.MONTH, monthOfYear)
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+            updateLabel()
+        }
+
+        dueDate.setOnClickListener {
+            DatePickerDialog(this, date, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show()
+        }
+
+        val taskDescription: TextView = findViewById(R.id.textView)
         taskDescription.text = task.description
+        taskDescription.setOnClickListener {
+            val intent = Intent(this@TaskEditActivity, DescriptionEditActivity::class.java)
+            intent.putExtra("task", task)
+            startActivityForResult(intent, 2)
+        }
+    }
+
+    private fun updateLabel() {
+        val dueDate: TextView = findViewById(R.id.editText2)
+        val myFormat = "dd.MM.yyyy"
+        dueDate.text = SimpleDateFormat(myFormat, Locale.US).format(calendar.time)
     }
 
     override fun onSupportNavigateUp(): Boolean {
