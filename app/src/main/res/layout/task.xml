@@ -5,11 +5,11 @@
     android:layout_height="wrap_content">
 
     <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" app:srcCompat="@android:drawable/checkbox_off_background" android:id="@+id/closeTaskBtn" android:layout_weight="1"
+        android:layout_width="38dp"
+        android:layout_height="38dp" app:srcCompat="@android:drawable/checkbox_off_background" android:id="@+id/closeTaskBtn"
         android:adjustViewBounds="false"/>
     <TextView
-        android:layout_width="wrap_content"
-        android:id="@+id/item_text" android:layout_weight="48" android:layout_height="38dp" android:gravity="start|center_vertical"
-        android:textSize="24sp"/>
+        android:layout_width="0dp"
+        android:id="@+id/item_text" android:layout_weight="48" android:layout_height="wrap_content" android:gravity="start|center_vertical"
+        android:textSize="21sp" android:minHeight="38dp"/>
 </LinearLayout>
