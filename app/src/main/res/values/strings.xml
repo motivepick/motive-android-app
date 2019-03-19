@@ -3,6 +3,8 @@
     <string name="title_tasks">Tasks</string>
     <string name="title_schedule">Schedule</string>
     <string name="title_account">Account</string>
+    <string name="title_edit_task">Edit Task</string>
+    <string name="title_edit_description">Edit Notes</string>
     <string name="menu_delete_task">Delete task</string>
     <string name="button_login_with_facebook">Login With Facebook</string>
     <string name="button_login_with_vk">Login With VK</string>

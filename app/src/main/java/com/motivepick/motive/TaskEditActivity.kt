@@ -1,6 +1,7 @@
 package com.motivepick.motive
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.DatePickerDialog.OnDateSetListener
 import android.content.Context
@@ -22,6 +23,8 @@ import java.util.*
 
 class TaskEditActivity : AppCompatActivity() {
 
+    val TASK_DESCRIPTION_EDIT_ACTICITY_REQUEST_CODE = 2
+
     private val calendar: Calendar = Calendar.getInstance()
 
     private var task: TaskViewItem? = null
@@ -30,6 +33,7 @@ class TaskEditActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        title = resources.getText(R.string.title_edit_task)
         setContentView(R.layout.activity_task_edit)
 
         val view: View = findViewById(android.R.id.content)
@@ -85,12 +89,12 @@ class TaskEditActivity : AppCompatActivity() {
                 }, { Log.e("Tasks", "Error happened $it") })
         }
 
-        val taskDescription: TextView = findViewById(R.id.textView)
-        taskDescription.text = task!!.description
-        taskDescription.setOnClickListener {
+        val descriptionView: TextView = findViewById(R.id.textView)
+        descriptionView.text = task!!.description
+        descriptionView.setOnClickListener {
             val intent = Intent(this@TaskEditActivity, DescriptionEditActivity::class.java)
             intent.putExtra("task", task)
-            startActivityForResult(intent, 2)
+            startActivityForResult(intent, TASK_DESCRIPTION_EDIT_ACTICITY_REQUEST_CODE)
         }
     }
 
@@ -131,4 +135,14 @@ class TaskEditActivity : AppCompatActivity() {
         } else {
             super.onOptionsItemSelected(item)
         }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == TASK_DESCRIPTION_EDIT_ACTICITY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            val description: String = data!!.getStringExtra("description")
+            this.task = TaskViewItem(this.task!!.id, this.task!!.name, description, this.task!!.dueDate, this.task!!.closed)
+            val descriptionView: TextView = findViewById(R.id.textView)
+            descriptionView.text = this.task!!.description
+        }
+    }
 }
