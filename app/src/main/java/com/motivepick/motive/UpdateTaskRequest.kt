@@ -1,10 +1,14 @@
 package com.motivepick.motive
 
-data class UpdateTaskRequest(val name: String?, val description: String?, val deleteDueDate: Boolean) {
+import java.util.*
 
-    constructor(name: String?) : this(name, null, false)
+data class UpdateTaskRequest(val name: String?, val description: String?, val dueDate: Date?, val deleteDueDate: Boolean) {
 
-    constructor(name: String?, description: String?) : this(name, description, false)
+    constructor(name: String?) : this(name, null, null, false)
 
-    constructor(deleteDueDate: Boolean) : this(null, null, deleteDueDate)
+    constructor(name: String?, description: String?) : this(name, description, null, false)
+
+    constructor(deleteDueDate: Boolean) : this(null, null, null, deleteDueDate)
+
+    constructor(dueDate: Date) : this(null, null, dueDate, false)
 }

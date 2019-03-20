@@ -70,8 +70,13 @@ class TaskEditActivity : AppCompatActivity() {
             calendar.set(Calendar.YEAR, year)
             calendar.set(Calendar.MONTH, monthOfYear)
             calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-            this.task = TaskViewItem(this.task!!.id, this.task!!.name, this.task!!.description, calendar.time, this.task!!.closed)
             updateLabel()
+            repository.updateTask(token, task!!.id, UpdateTaskRequest(calendar.time))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe({
+                    this.task = TaskViewItem(this.task!!.id, this.task!!.name, this.task!!.description, it.dueDate, this.task!!.closed)
+                }, { Log.e("Tasks", "Error happened $it") })
         }
 
         dueDate.setOnClickListener {

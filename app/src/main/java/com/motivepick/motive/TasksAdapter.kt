@@ -25,11 +25,12 @@ class TasksAdapter(private var tasks: List<TaskViewItem>, private val onTaskClos
         val task = tasks[position]
         holder.checkBox.setOnClickListener { onTaskClose(task) }
         holder.textView.text = task.name
-        holder.textView.setOnClickListener { onTaskClick(task) }
+        holder.clickable.setOnClickListener { onTaskClick(task) }
         if (task.dueDate == null) {
             holder.textView.gravity = Gravity.START or Gravity.CENTER_VERTICAL
             holder.dueDateView.visibility = View.GONE
         } else {
+            holder.dueDateView.visibility = View.VISIBLE
             holder.dueDateView.text = SimpleDateFormat("dd.MM.yyyy", Locale.US).format(task.dueDate)
             holder.dueDateView.setTextColor(if (overdue(task.dueDate)) Color.parseColor("#E35446") else Color.parseColor("#78D174"))
         }
@@ -74,6 +75,7 @@ class TasksAdapter(private var tasks: List<TaskViewItem>, private val onTaskClos
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         val checkBox: ImageButton = itemView.findViewById(R.id.closeTaskBtn)
+        val clickable: View = itemView.findViewById(R.id.item_clickable)
         val textView: TextView = itemView.findViewById(R.id.item_text)
         val dueDateView: TextView = itemView.findViewById(R.id.item_date)
     }
