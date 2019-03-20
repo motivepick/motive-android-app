@@ -1,18 +1,23 @@
 package com.motivepick.motive
 
+import android.graphics.Color
 import android.support.v7.widget.RecyclerView
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import com.motivepick.motive.TasksAdapter.ViewHolder
+import java.text.SimpleDateFormat
+import java.util.*
+
 
 class TasksAdapter(private var tasks: List<TaskViewItem>, private val onTaskClose: (TaskViewItem) -> Unit, private val onTaskClick: (TaskViewItem) -> Unit) :
     RecyclerView.Adapter<ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.task, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.task_view_item, parent, false)
         return ViewHolder(view)
     }
 
@@ -21,6 +26,13 @@ class TasksAdapter(private var tasks: List<TaskViewItem>, private val onTaskClos
         holder.checkBox.setOnClickListener { onTaskClose(task) }
         holder.textView.text = task.name
         holder.textView.setOnClickListener { onTaskClick(task) }
+        if (task.dueDate == null) {
+            holder.textView.gravity = Gravity.START or Gravity.CENTER_VERTICAL
+            holder.dueDateView.visibility = View.GONE
+        } else {
+            holder.dueDateView.text = SimpleDateFormat("dd.MM.yyyy", Locale.US).format(task.dueDate)
+            holder.dueDateView.setTextColor(if (overdue(task.dueDate)) Color.parseColor("#E35446") else Color.parseColor("#78D174"))
+        }
     }
 
     override fun getItemCount(): Int = tasks.size
@@ -54,9 +66,15 @@ class TasksAdapter(private var tasks: List<TaskViewItem>, private val onTaskClos
         notifyItemRemoved(position)
     }
 
+    private fun overdue(dueDate: Date): Boolean {
+        val now = Date()
+        return now.time > dueDate.time
+    }
+
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         val checkBox: ImageButton = itemView.findViewById(R.id.closeTaskBtn)
         val textView: TextView = itemView.findViewById(R.id.item_text)
+        val dueDateView: TextView = itemView.findViewById(R.id.item_date)
     }
 }
