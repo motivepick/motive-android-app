@@ -9,4 +9,7 @@
     <string name="button_login_with_facebook">Login With Facebook</string>
     <string name="button_login_with_vk">Login With VK</string>
     <string name="hint_create_new_task">New Task</string>
+    <string name="hint_when_is_it_due">When is it due?</string>
+    <string name="hint_place_for_your_notes">A place for your notes</string>
+    <string name="button_clear_date">Clear</string>
 </resources>
