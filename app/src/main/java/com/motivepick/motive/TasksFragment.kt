@@ -10,15 +10,11 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
-
 
 class TasksFragment : Fragment() {
 
@@ -29,16 +25,9 @@ class TasksFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         model = activity?.run { ViewModelProviders.of(this).get(TasksViewModel::class.java) } ?: throw Exception("invalid activity")
-
         model.getTasks().observe(this, Observer<List<Task>> { tasks ->
             val tasksRecyclerView: RecyclerView = view!!.findViewById(R.id.tasksRecyclerView)
-            val token: Token = TokenStorage(activity).getToken()
-            val repository: TaskRepository = TaskRepositoryFactory.create(Config(activity!!))
-            tasksRecyclerView.adapter = TasksAdapter(tasks!!.map { TaskViewItem.from(it) }, {
-                handleTaskClose(token, repository, it) { taskViewItem ->
-                    (tasksRecyclerView.adapter as TasksAdapter).handleTaskCloseSuccess(taskViewItem)
-                }
-            }, ::handleTaskClick)
+            tasksRecyclerView.adapter = TasksAdapter(tasks!!.map { TaskViewItem.from(it) }, model::closeTask, ::handleTaskClick)
         })
     }
 
@@ -52,12 +41,9 @@ class TasksFragment : Fragment() {
         val taskNameEditText: EditText = view.findViewById(R.id.taskNameEditText) as EditText
         taskNameEditText.setOnEditorActionListener { textView, actionId, event ->
             if (Keyboard.enterPressed(actionId, event)) {
-                if (textView.text.isNotBlank()) {
-                    model.createTask(textView.text.toString()) { task ->
-                        (tasksRecyclerView.adapter as TasksAdapter).handleTaskCreateSuccess(TaskViewItem.from(task))
-                        textView.text = ""
-                        tasksRecyclerView.scrollToPosition(0)
-                    }
+                model.createTask(textView.text.toString()) {
+                    textView.text = ""
+                    tasksRecyclerView.scrollToPosition(0)
                 }
                 val manager = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 manager.hideSoftInputFromWindow(view.windowToken, 0)
@@ -81,14 +67,6 @@ class TasksFragment : Fragment() {
                 (tasksRecyclerView.adapter as TasksAdapter).handleTaskUpdateSuccess(updatedTask)
             }
         }
-    }
-
-    @SuppressLint("CheckResult")
-    private fun handleTaskClose(token: Token, repository: TaskRepository, item: TaskViewItem, onSuccess: (TaskViewItem) -> Unit) {
-        if (item.closed) repository.undoCloseTask(token, item.id) else repository.closeTask(token, item.id)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe({ task -> onSuccess(TaskViewItem.from(task)) }, { Log.e("Tasks", "Error happened $it") })
     }
 
     private fun handleTaskClick(task: TaskViewItem) {

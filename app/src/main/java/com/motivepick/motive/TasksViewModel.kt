@@ -14,7 +14,7 @@ class TasksViewModel(application: Application) : AndroidViewModel(application) {
         MutableLiveData<List<Task>>().also { loadTasks() }
     }
 
-    fun createTask(name: String, onTaskCreated: (Task) -> Unit) {
+    fun createTask(name: String, onTaskCreated: () -> Unit) {
         val application = getApplication<Application>()
         val token: Token = TokenStorage(application).getToken()
         val repository: TaskRepository = TaskRepositoryFactory.create(Config(application))
@@ -24,13 +24,29 @@ class TasksViewModel(application: Application) : AndroidViewModel(application) {
                 .subscribeOn(Schedulers.io())
                 .subscribe { task: Task ->
                     tasks.value = listOf(task) + tasks.value!!
-                    onTaskCreated(task)
+                    onTaskCreated()
                 }
         }
     }
 
     fun getTasks(): LiveData<List<Task>> {
         return tasks
+    }
+
+    fun closeTask(task: TaskViewItem) {
+        val application = getApplication<Application>()
+        val token: Token = TokenStorage(application).getToken()
+        val repository: TaskRepository = TaskRepositoryFactory.create(Config(application))
+        if (task.closed) repository.undoCloseTask(token, task.id) else repository.closeTask(token, task.id)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe { response ->
+                if (response.closed) {
+                    tasks.value = tasks.value!!.filterNot { it.id == response.id }
+                } else {
+                    throw Exception("not yet implemented")
+                }
+            }
     }
 
     private fun loadTasks() {
