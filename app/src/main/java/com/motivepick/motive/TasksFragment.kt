@@ -45,8 +45,6 @@ class TasksFragment : Fragment() {
     @SuppressLint("CheckResult")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_tasks, container, false)
-        val token: Token = TokenStorage(activity).getToken()
-        val repository: TaskRepository = TaskRepositoryFactory.create(Config(activity!!))
 
         val tasksRecyclerView: RecyclerView = view.findViewById(R.id.tasksRecyclerView)
         tasksRecyclerView.layoutManager = LinearLayoutManager(activity)
@@ -55,14 +53,11 @@ class TasksFragment : Fragment() {
         taskNameEditText.setOnEditorActionListener { textView, actionId, event ->
             if (Keyboard.enterPressed(actionId, event)) {
                 if (textView.text.isNotBlank()) {
-                    repository.createTask(token, Task(null, textView.text.toString(), null, null, false))
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeOn(Schedulers.io())
-                        .subscribe({ task ->
-                            (tasksRecyclerView.adapter as TasksAdapter).handleTaskCreateSuccess(TaskViewItem.from(task))
-                            textView.text = ""
-                            tasksRecyclerView.scrollToPosition(0)
-                        }, { Log.e("Tasks", "Error happened $it") })
+                    model.createTask(textView.text.toString()) { task ->
+                        (tasksRecyclerView.adapter as TasksAdapter).handleTaskCreateSuccess(TaskViewItem.from(task))
+                        textView.text = ""
+                        tasksRecyclerView.scrollToPosition(0)
+                    }
                 }
                 val manager = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 manager.hideSoftInputFromWindow(view.windowToken, 0)

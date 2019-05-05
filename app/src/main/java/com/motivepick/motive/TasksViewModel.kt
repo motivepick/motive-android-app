@@ -14,6 +14,21 @@ class TasksViewModel(application: Application) : AndroidViewModel(application) {
         MutableLiveData<List<Task>>().also { loadTasks() }
     }
 
+    fun createTask(name: String, onTaskCreated: (Task) -> Unit) {
+        val application = getApplication<Application>()
+        val token: Token = TokenStorage(application).getToken()
+        val repository: TaskRepository = TaskRepositoryFactory.create(Config(application))
+        if (name.isNotBlank()) {
+            val disposable = repository.createTask(token, Task(null, name, null, null, false))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe { task: Task ->
+                    tasks.value = listOf(task) + tasks.value!!
+                    onTaskCreated(task)
+                }
+        }
+    }
+
     fun getTasks(): LiveData<List<Task>> {
         return tasks
     }
