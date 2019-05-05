@@ -2,6 +2,8 @@ package com.motivepick.motive
 
 import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -21,6 +23,24 @@ import io.reactivex.schedulers.Schedulers
 class TasksFragment : Fragment() {
 
     val TASK_EDIT_ACTICITY_REQUEST_CODE = 1
+
+    private lateinit var model: TasksViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        model = activity?.run { ViewModelProviders.of(this).get(TasksViewModel::class.java) } ?: throw Exception("invalid activity")
+
+        model.getTasks().observe(this, Observer<List<Task>> { tasks ->
+            val tasksRecyclerView: RecyclerView = view!!.findViewById(R.id.tasksRecyclerView)
+            val token: Token = TokenStorage(activity).getToken()
+            val repository: TaskRepository = TaskRepositoryFactory.create(Config(activity!!))
+            tasksRecyclerView.adapter = TasksAdapter(tasks!!.map { TaskViewItem.from(it) }, {
+                handleTaskClose(token, repository, it) { taskViewItem ->
+                    (tasksRecyclerView.adapter as TasksAdapter).handleTaskCloseSuccess(taskViewItem)
+                }
+            }, ::handleTaskClick)
+        })
+    }
 
     @SuppressLint("CheckResult")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -51,17 +71,6 @@ class TasksFragment : Fragment() {
                 false
             }
         }
-
-        repository.searchTasks(token, false)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe({ tasks ->
-                tasksRecyclerView.adapter = TasksAdapter(tasks.map { TaskViewItem.from(it) }, {
-                    handleTaskClose(token, repository, it) { taskViewItem ->
-                        (tasksRecyclerView.adapter as TasksAdapter).handleTaskCloseSuccess(taskViewItem)
-                    }
-                }, ::handleTaskClick)
-            }, { Log.e("Tasks", "Error happened $it") })
         return view
     }
 
