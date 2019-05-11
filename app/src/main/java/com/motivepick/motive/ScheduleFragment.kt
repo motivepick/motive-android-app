@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.motivepick.motive.model.Task
+import com.motivepick.motive.model.TaskViewItem
 
 class ScheduleFragment : Fragment() {
 

@@ -15,10 +15,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import com.motivepick.motive.model.Task
+import com.motivepick.motive.model.TaskViewItem
 
 class TasksFragment : Fragment() {
 
     val TASK_EDIT_ACTICITY_REQUEST_CODE = 1
+    // TODO: when click on a task, animate from left ot right, not from bottom to top
 
     private lateinit var model: TasksViewModel
 

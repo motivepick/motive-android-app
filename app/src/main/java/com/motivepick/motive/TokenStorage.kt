@@ -3,6 +3,7 @@ package com.motivepick.motive
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
+import com.motivepick.motive.model.Token
 
 class TokenStorage(private val context: Context?) {
 

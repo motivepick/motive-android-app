@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.motivepick.motive.model.TaskViewItem
 
 
 class ScheduleAdapter(private val tasks: List<TaskViewItem>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
