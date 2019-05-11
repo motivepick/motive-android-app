@@ -1,6 +1,8 @@
 package com.motivepick.motive
 
+import android.graphics.Color
 import android.support.v7.widget.RecyclerView
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,23 +11,16 @@ import com.motivepick.motive.model.Header
 import com.motivepick.motive.model.Schedule
 import com.motivepick.motive.model.TaskViewItem
 import java.io.Serializable
+import java.text.SimpleDateFormat
 import java.util.*
-import java.util.Calendar.*
+import java.util.Calendar.DAY_OF_WEEK
+import java.util.Calendar.getInstance
 import kotlin.collections.ArrayList
 
-class ScheduleAdapter(schedule: Schedule) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ScheduleAdapter(private val week: Map<Int, String>, schedule: Schedule) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val SECTION_VIEW = 0
     private val CONTENT_VIEW = 1
-    private val WEEK: Map<Int, String> = mapOf(
-        MONDAY to "Monday",
-        TUESDAY to "Tuesday",
-        WEDNESDAY to "Wednesday",
-        THURSDAY to "Thursday",
-        FRIDAY to "Friday",
-        SATURDAY to "Saturday",
-        SUNDAY to "Sunday"
-    )
 
     private val tasks: List<Serializable>
 
@@ -37,8 +32,11 @@ class ScheduleAdapter(schedule: Schedule) : RecyclerView.Adapter<RecyclerView.Vi
         val result = ArrayList<Serializable>()
         for (day in schedule.week.keys) {
             val dayOfWeek = asDayOfWeek(day)
-            result.add(Header(WEEK[dayOfWeek]!!))
-            schedule.week[day]!!.forEach { result.add(it) }
+            val tasks = schedule.week[day]!!
+            if (tasks.isNotEmpty()) {
+                result.add(Header(week[dayOfWeek]!!))
+                tasks.forEach { result.add(it) }
+            }
         }
         val future = schedule.future
         if (future.isNotEmpty()) {
@@ -63,7 +61,7 @@ class ScheduleAdapter(schedule: Schedule) : RecyclerView.Adapter<RecyclerView.Vi
         return if (viewType == SECTION_VIEW) {
             SectionHeaderViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.schedule_header_title, parent, false))
         } else {
-            ItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.task_view_item, parent, false))
+            TaskViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.task_view_item, parent, false))
         }
     }
 
@@ -79,14 +77,18 @@ class ScheduleAdapter(schedule: Schedule) : RecyclerView.Adapter<RecyclerView.Vi
             val sectionItem = tasks[position] as Header
             sectionHeaderViewHolder.headerTitleTextView.text = sectionItem.title
         } else {
-            val itemViewHolder = holder as ItemViewHolder
+            val itemViewHolder = holder as TaskViewHolder
             val task = tasks[position] as TaskViewItem
-            itemViewHolder.nameTextView.text = task.name
+            itemViewHolder.textView.text = task.name
+            if (task.dueDate == null) {
+                holder.textView.gravity = Gravity.START or Gravity.CENTER_VERTICAL
+                holder.dueDateView.visibility = View.GONE
+            } else {
+                holder.dueDateView.visibility = View.VISIBLE
+                holder.dueDateView.text = SimpleDateFormat("dd.MM.yyyy", Locale.US).format(task.dueDate)
+                holder.dueDateView.setTextColor(if (task.isOverdue()) Color.parseColor("#E35446") else Color.parseColor("#78D174"))
+            }
         }
-    }
-
-    class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var nameTextView: TextView = itemView.findViewById(R.id.item_text)
     }
 
     class SectionHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

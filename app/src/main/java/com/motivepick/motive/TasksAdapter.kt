@@ -6,23 +6,19 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.TextView
-import com.motivepick.motive.TasksAdapter.ViewHolder
 import com.motivepick.motive.model.TaskViewItem
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 class TasksAdapter(private var tasks: List<TaskViewItem>, private val onTaskClose: (TaskViewItem) -> Unit, private val onTaskClick: (TaskViewItem) -> Unit) :
-    RecyclerView.Adapter<ViewHolder>() {
+    RecyclerView.Adapter<TaskViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.task_view_item, parent, false)
-        return ViewHolder(view)
+        return TaskViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         val task = tasks[position]
         holder.checkBox.setOnClickListener { onTaskClose(task) }
         holder.textView.text = task.name
@@ -33,7 +29,7 @@ class TasksAdapter(private var tasks: List<TaskViewItem>, private val onTaskClos
         } else {
             holder.dueDateView.visibility = View.VISIBLE
             holder.dueDateView.text = SimpleDateFormat("dd.MM.yyyy", Locale.US).format(task.dueDate)
-            holder.dueDateView.setTextColor(if (overdue(task.dueDate)) Color.parseColor("#E35446") else Color.parseColor("#78D174"))
+            holder.dueDateView.setTextColor(if (task.isOverdue()) Color.parseColor("#E35446") else Color.parseColor("#78D174"))
         }
     }
 
@@ -53,18 +49,5 @@ class TasksAdapter(private var tasks: List<TaskViewItem>, private val onTaskClos
         val position = tasks.indexOf(task)
         tasks = tasks.filterNot { it.id == id }
         notifyItemRemoved(position)
-    }
-
-    private fun overdue(dueDate: Date): Boolean {
-        val now = Date()
-        return now.time > dueDate.time
-    }
-
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        val checkBox: ImageButton = itemView.findViewById(R.id.closeTaskBtn)
-        val clickable: View = itemView.findViewById(R.id.item_clickable)
-        val textView: TextView = itemView.findViewById(R.id.item_text)
-        val dueDateView: TextView = itemView.findViewById(R.id.item_date)
     }
 }

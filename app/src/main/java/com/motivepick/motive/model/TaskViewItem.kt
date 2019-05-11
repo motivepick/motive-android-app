@@ -9,4 +9,8 @@ data class TaskViewItem(val id: Long, val name: String, val description: String,
         fun from(task: Task): TaskViewItem =
             TaskViewItem(task.id!!, task.name, task.description ?: "", task.dueDate, task.closed)
     }
+
+    fun isOverdue(): Boolean {
+        return if (dueDate == null) false else Date().time > dueDate.time
+    }
 }

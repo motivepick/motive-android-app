@@ -23,8 +23,9 @@ class ScheduleFragment : Fragment() {
         model = activity?.run { ViewModelProviders.of(this).get(TasksViewModel::class.java) } ?: throw Exception("invalid activity")
         model.getTasks().observe(this, Observer<List<Task>> { tasks ->
             val scheduleRecyclerView: RecyclerView = view!!.findViewById(R.id.scheduleRecyclerView)
-            val factory = ScheduleFactory(CurrentDateFactoryImpl())
-            scheduleRecyclerView.adapter = ScheduleAdapter(factory.scheduleFor(tasks!!.map { TaskViewItem.from(it) }))
+            val week = WeekFactory(activity!!).createWeek()
+            val scheduleFactory = ScheduleFactory(CurrentDateFactoryImpl())
+            scheduleRecyclerView.adapter = ScheduleAdapter(week, scheduleFactory.scheduleFor(tasks!!.map { TaskViewItem.from(it) }))
         })
     }
 
