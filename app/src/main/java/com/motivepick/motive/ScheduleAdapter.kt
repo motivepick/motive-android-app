@@ -61,7 +61,7 @@ class ScheduleAdapter(private val week: Map<Int, String>, schedule: Schedule, pr
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return if (viewType == SECTION_VIEW) {
-            SectionHeaderViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.schedule_header_title, parent, false))
+            SectionHeaderViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.schedule_subtitle, parent, false))
         } else {
             TaskViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.task_view_item, parent, false))
         }

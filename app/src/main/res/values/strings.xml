@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Motive</string>
     <string name="title_tasks">Tasks</string>
+    <string name="subtitle_tasks_section">12 tasks</string>
+    <string name="button_show_closed_tasks">Show Closed Tasks</string>
     <string name="title_schedule">Schedule</string>
     <string name="title_schedule_section">Schedule</string>
     <string name="title_account">Account</string>
