@@ -1,6 +1,6 @@
 package com.motivepick.motive.schedule
 
-import com.motivepick.motive.model.TaskViewItem
+import com.motivepick.motive.model.Task
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.util.*
@@ -23,8 +23,8 @@ class ScheduleFactoryTest {
         assertEquals(1, schedule.week[endOfDay(tomorrow)]!!.size)
     }
 
-    private fun task(dueDate: Date): TaskViewItem {
-        return TaskViewItem(1665, "Cleanup database", "Remove obsolete data", dueDate, false)
+    private fun task(dueDate: Date): Task {
+        return Task(1665, "Cleanup database", "Remove obsolete data", dueDate, false)
     }
 
     private fun date(year: Int, month: Int, dayOfMonth: Int, hour: Int, minute: Int): Date {

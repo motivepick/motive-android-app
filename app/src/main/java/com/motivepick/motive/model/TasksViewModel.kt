@@ -13,8 +13,8 @@ import io.reactivex.schedulers.Schedulers
 
 class TasksViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val tasks: MutableLiveData<List<Task>> by lazy {
-        MutableLiveData<List<Task>>().also { loadTasks() }
+    private val tasks: MutableLiveData<List<TaskFromServer>> by lazy {
+        MutableLiveData<List<TaskFromServer>>().also { loadTasks() }
     }
 
     fun createTask(name: String, onTaskCreated: () -> Unit) {
@@ -22,32 +22,32 @@ class TasksViewModel(application: Application) : AndroidViewModel(application) {
         val token: Token = TokenStorage(application).getToken()
         val repository: TaskRepository = TaskRepositoryFactory.create(Config(application))
         if (name.isNotBlank()) {
-            val disposable = repository.createTask(token, Task(null, name, null, null, false))
+            val disposable = repository.createTask(token, TaskFromServer(null, name, null, null, false))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe { task: Task ->
+                .subscribe { task: TaskFromServer ->
                     tasks.value = listOf(task) + tasks.value!!
                     onTaskCreated()
                 }
         }
     }
 
-    fun getTasks(): LiveData<List<Task>> {
+    fun getTasks(): LiveData<List<TaskFromServer>> {
         return tasks
     }
 
     // TODO: consider calling server from this method and calling the method from task edit activity itself; same for task deletion
-    fun updateTask(updated: TaskViewItem) {
-        val left: List<Task> = tasks.value!!.takeWhile { it.id != updated.id }
-        val right: List<Task> = tasks.value!!.takeLastWhile { it.id != updated.id }
-        tasks.value = left + listOf(Task(updated.id, updated.name, updated.description, updated.dueDate, updated.closed)) + right
+    fun updateTask(updated: Task) {
+        val left: List<TaskFromServer> = tasks.value!!.takeWhile { it.id != updated.id }
+        val right: List<TaskFromServer> = tasks.value!!.takeLastWhile { it.id != updated.id }
+        tasks.value = left + listOf(TaskFromServer(updated.id, updated.name, updated.description, updated.dueDate, updated.closed)) + right
     }
 
     fun deleteTask(id: Long) {
         tasks.value = tasks.value!!.filterNot { it.id == id }
     }
 
-    fun closeTask(task: TaskViewItem) {
+    fun closeTask(task: Task) {
         val application = getApplication<Application>()
         val token: Token = TokenStorage(application).getToken()
         val repository: TaskRepository = TaskRepositoryFactory.create(Config(application))
@@ -67,7 +67,7 @@ class TasksViewModel(application: Application) : AndroidViewModel(application) {
         val application = getApplication<Application>()
         val token: Token = TokenStorage(application).getToken()
         val repository: TaskRepository = TaskRepositoryFactory.create(Config(application))
-        val observable: Observable<List<Task>> = repository.searchTasks(token, false)
+        val observable: Observable<List<TaskFromServer>> = repository.searchTasks(token, false)
         val disposable = observable.observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe {

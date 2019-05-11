@@ -16,7 +16,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.TextView
 import com.motivepick.motive.model.Config
-import com.motivepick.motive.model.TaskViewItem
+import com.motivepick.motive.model.Task
 import com.motivepick.motive.model.Token
 import com.motivepick.motive.model.UpdateTaskRequest
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -31,7 +31,7 @@ class TaskEditActivity : AppCompatActivity() {
 
     private val calendar: Calendar = Calendar.getInstance()
 
-    private var task: TaskViewItem? = null
+    private var task: Task? = null
 
     @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,7 +44,7 @@ class TaskEditActivity : AppCompatActivity() {
         val token: Token = TokenStorage(this).getToken()
         val repository: TaskRepository = TaskRepositoryFactory.create(Config(this))
 
-        this.task = intent.extras!!.get("task") as TaskViewItem
+        this.task = intent.extras!!.get("task") as Task
         val taskName: TextView = findViewById(R.id.taskName)
         taskName.text = task!!.name
         taskName.setOnEditorActionListener { textView, actionId, event ->
@@ -53,7 +53,7 @@ class TaskEditActivity : AppCompatActivity() {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
                     .subscribe({ task ->
-                        this.task = TaskViewItem(this.task!!.id, task.name, this.task!!.description, this.task!!.dueDate, this.task!!.closed)
+                        this.task = Task(this.task!!.id, task.name, this.task!!.description, this.task!!.dueDate, this.task!!.closed)
                     }, { Log.e("Tasks", "Error happened $it") })
                 val manager = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 manager.hideSoftInputFromWindow(view.windowToken, 0)
@@ -79,7 +79,7 @@ class TaskEditActivity : AppCompatActivity() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe({
-                    this.task = TaskViewItem(this.task!!.id, this.task!!.name, this.task!!.description, it.dueDate, this.task!!.closed)
+                    this.task = Task(this.task!!.id, this.task!!.name, this.task!!.description, it.dueDate, this.task!!.closed)
                 }, { Log.e("Tasks", "Error happened $it") })
         }
 
@@ -93,7 +93,7 @@ class TaskEditActivity : AppCompatActivity() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe({
-                    this.task = TaskViewItem(this.task!!.id, this.task!!.name, this.task!!.description, null, this.task!!.closed)
+                    this.task = Task(this.task!!.id, this.task!!.name, this.task!!.description, null, this.task!!.closed)
                     dueDate.text = ""
                 }, { Log.e("Tasks", "Error happened $it") })
         }
@@ -128,7 +128,7 @@ class TaskEditActivity : AppCompatActivity() {
     @SuppressLint("CheckResult")
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
         if (item.itemId == R.id.deleteTaskMenuItem) {
-            val task: TaskViewItem = intent.extras!!.get("task") as TaskViewItem
+            val task: Task = intent.extras!!.get("task") as Task
             val token: Token = TokenStorage(this).getToken()
             val repository: TaskRepository = TaskRepositoryFactory.create(Config(this))
             repository.deleteTask(token, task.id)
@@ -149,7 +149,7 @@ class TaskEditActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == TASK_DESCRIPTION_EDIT_ACTICITY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             val description: String = data!!.getStringExtra("description")
-            this.task = TaskViewItem(this.task!!.id, this.task!!.name, description, this.task!!.dueDate, this.task!!.closed)
+            this.task = Task(this.task!!.id, this.task!!.name, description, this.task!!.dueDate, this.task!!.closed)
             val descriptionView: TextView = findViewById(R.id.textView)
             descriptionView.text = this.task!!.description
         }

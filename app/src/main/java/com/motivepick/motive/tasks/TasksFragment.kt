@@ -19,7 +19,7 @@ import com.motivepick.motive.Keyboard
 import com.motivepick.motive.R
 import com.motivepick.motive.TaskEditActivity
 import com.motivepick.motive.model.Task
-import com.motivepick.motive.model.TaskViewItem
+import com.motivepick.motive.model.TaskFromServer
 import com.motivepick.motive.model.TasksViewModel
 
 class TasksFragment : Fragment() {
@@ -32,9 +32,9 @@ class TasksFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         model = activity?.run { ViewModelProviders.of(this).get(TasksViewModel::class.java) } ?: throw Exception("invalid activity")
-        model.getTasks().observe(this, Observer<List<Task>> { tasks ->
+        model.getTasks().observe(this, Observer<List<TaskFromServer>> { tasks ->
             val tasksRecyclerView: RecyclerView = view!!.findViewById(R.id.tasksRecyclerView)
-            tasksRecyclerView.adapter = TasksAdapter(tasks!!.map { TaskViewItem.from(it) }, model::closeTask, ::handleTaskClick)
+            tasksRecyclerView.adapter = TasksAdapter(activity!!, tasks!!.map { Task.from(it) }, model::closeTask, ::handleTaskClick)
         })
     }
 
@@ -67,14 +67,14 @@ class TasksFragment : Fragment() {
         if (requestCode == TASK_EDIT_ACTICITY_REQUEST_CODE && resultCode == RESULT_OK) {
             val id: Long = data!!.getLongExtra("deletedTaskId", Long.MIN_VALUE)
             if (id == Long.MIN_VALUE) {
-                model.updateTask(data.getSerializableExtra("updatedTask") as TaskViewItem)
+                model.updateTask(data.getSerializableExtra("updatedTask") as Task)
             } else {
                 model.deleteTask(id)
             }
         }
     }
 
-    private fun handleTaskClick(task: TaskViewItem) {
+    private fun handleTaskClick(task: Task) {
         val intent = Intent(activity, TaskEditActivity::class.java)
         intent.putExtra("task", task)
         startActivityForResult(intent, TASK_EDIT_ACTICITY_REQUEST_CODE)

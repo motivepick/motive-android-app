@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.EditText
 import com.motivepick.motive.model.Config
-import com.motivepick.motive.model.TaskViewItem
+import com.motivepick.motive.model.Task
 import com.motivepick.motive.model.Token
 import com.motivepick.motive.model.UpdateTaskRequest
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -21,7 +21,7 @@ class DescriptionEditActivity : AppCompatActivity() {
         title = resources.getText(R.string.title_edit_description)
         setContentView(R.layout.activity_description_edit)
 
-        val task = intent.extras!!.get("task") as TaskViewItem
+        val task = intent.extras!!.get("task") as Task
         val description: EditText = findViewById(R.id.editText)
         description.setText(task.description)
     }
@@ -29,7 +29,7 @@ class DescriptionEditActivity : AppCompatActivity() {
     @SuppressLint("CheckResult")
     override fun onSupportNavigateUp(): Boolean {
         val description: EditText = findViewById(R.id.editText)
-        val item = intent.extras!!.get("task") as TaskViewItem
+        val item = intent.extras!!.get("task") as Task
         val token: Token = TokenStorage(this).getToken()
         val repository: TaskRepository = TaskRepositoryFactory.create(Config(this))
         repository.updateTask(token, item.id, UpdateTaskRequest(null, description.text.toString()))

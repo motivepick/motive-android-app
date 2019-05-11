@@ -2,7 +2,7 @@ package com.motivepick.motive.model
 
 import java.util.*
 
-class Schedule(val week: Map<Date, List<TaskViewItem>>, val overdue: List<TaskViewItem>, val future: List<TaskViewItem>) {
+class Schedule(val week: Map<Date, List<Task>>, val overdue: List<Task>, val future: List<Task>) {
 
     override fun toString(): String {
         return "Schedule(week=$week, overdue=$overdue, future=$future)"
