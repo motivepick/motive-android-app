@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Motive</string>
+    <string name="title_tasks">Задачи</string>
+    <plurals name="subtitle_tasks_section">
+        <item quantity="one">%d задача</item>
+        <item quantity="few">%d задачи</item>
+        <item quantity="many">%d задач</item>
+        <item quantity="other">%d задач</item>
+    </plurals>
+    <string name="button_show_closed_tasks">Показать закрытые</string>
+    <string name="button_show_open_tasks">Показать открытые</string>
+    <string name="title_schedule">График</string>
+    <string name="title_schedule_section">График</string>
+    <string name="title_account">Аккаунт</string>
+    <string name="title_edit_task">Редактировать задачу</string>
+    <string name="title_edit_description">Редактироват заметки</string>
+    <string name="menu_delete_task">Удалить задачу</string>
+    <string name="button_login_with_facebook">Войти с Facebook</string>
+    <string name="button_login_with_vk">Войти c VK</string>
+    <string name="hint_create_new_task">Создать новую задачу</string>
+    <string name="hint_when_is_it_due">Когда?</string>
+    <string name="hint_place_for_your_notes">Место для заметок</string>
+    <string name="button_clear_date">Сброс</string>
+    <string name="title_monday">Понедельник</string>
+    <string name="title_tuesday">Вторник</string>
+    <string name="title_wednesday">Среда</string>
+    <string name="title_thursday">Четверг</string>
+    <string name="title_friday">Пятница</string>
+    <string name="title_saturday">Суббота</string>
+    <string name="title_sunday">Воскресенье</string>
+    <string name="button_logout">Выйти</string>
+</resources>

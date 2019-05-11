@@ -31,8 +31,7 @@ class ScheduleFragment : Fragment() {
             val scheduleRecyclerView: RecyclerView = view!!.findViewById(R.id.scheduleRecyclerView)
             val week = WeekFactory(activity!!).createWeek()
             val scheduleFactory = ScheduleFactory(CurrentDateFactoryImpl())
-            scheduleRecyclerView.adapter =
-                ScheduleAdapter(week, scheduleFactory.scheduleFor(tasks!!.map { Task.from(it) }), model::closeTask, ::handleTaskClick)
+            scheduleRecyclerView.adapter = ScheduleAdapter(week, scheduleFactory.scheduleFor(tasks!!.map { Task.from(it) }), model::closeTask, ::handleTaskClick)
         })
     }
 

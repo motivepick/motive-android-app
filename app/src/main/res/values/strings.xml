@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Motive</string>
     <string name="title_tasks">Tasks</string>
@@ -6,6 +7,7 @@
         <item quantity="other">%d tasks</item>
     </plurals>
     <string name="button_show_closed_tasks">Show Closed Tasks</string>
+    <string name="button_show_open_tasks">Show Open Tasks</string>
     <string name="title_schedule">Schedule</string>
     <string name="title_schedule_section">Schedule</string>
     <string name="title_account">Account</string>
@@ -25,4 +27,5 @@
     <string name="title_friday">Friday</string>
     <string name="title_saturday">Saturday</string>
     <string name="title_sunday">Sunday</string>
+    <string name="button_logout">Logout</string>
 </resources>

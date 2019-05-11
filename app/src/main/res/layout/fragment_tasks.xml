@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
     <TextView
-        android:text="Tasks"
+        android:text="@string/title_tasks"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" android:id="@+id/textView2"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"

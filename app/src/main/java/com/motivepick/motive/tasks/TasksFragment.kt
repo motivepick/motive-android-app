@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,7 +35,7 @@ class TasksFragment : Fragment() {
         model = activity?.run { ViewModelProviders.of(this).get(TasksViewModel::class.java) } ?: throw Exception("invalid activity")
         model.getTasks().observe(this, Observer<List<TaskFromServer>> { tasks ->
             val tasksRecyclerView: RecyclerView = view!!.findViewById(R.id.tasksRecyclerView)
-            tasksRecyclerView.adapter = TasksAdapter(activity!!, tasks!!.map { Task.from(it) }, model::closeTask, ::handleTaskClick)
+            tasksRecyclerView.adapter = TasksAdapter(activity!!, tasks!!.map { Task.from(it) }, model::closeTask, ::handleTaskClick, ::handleShowClosedTasksClick)
         })
     }
 
@@ -78,6 +79,10 @@ class TasksFragment : Fragment() {
         val intent = Intent(activity, TaskEditActivity::class.java)
         intent.putExtra("task", task)
         startActivityForResult(intent, TASK_EDIT_ACTICITY_REQUEST_CODE)
+    }
+
+    private fun handleShowClosedTasksClick() {
+        Log.i("TAG", "CLICKED")
     }
 
     companion object {
