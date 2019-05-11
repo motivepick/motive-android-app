@@ -42,7 +42,7 @@ class ScheduleAdapter(private val week: Map<Int, String>, schedule: Schedule, pr
         }
         val future = schedule.future
         if (future.isNotEmpty()) {
-            result.add(ScheduleSection("Future"))
+            result.add(ScheduleSection("Next"))
             future.forEach { result.add(it) }
         }
         val overdue = schedule.overdue
