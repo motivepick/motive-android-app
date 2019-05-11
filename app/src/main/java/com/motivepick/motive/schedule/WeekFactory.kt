@@ -1,6 +1,7 @@
-package com.motivepick.motive
+package com.motivepick.motive.schedule
 
 import android.content.Context
+import com.motivepick.motive.R
 import java.util.Calendar.*
 
 class WeekFactory(private val context: Context) {

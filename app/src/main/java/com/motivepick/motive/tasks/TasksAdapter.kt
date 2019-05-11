@@ -1,4 +1,4 @@
-package com.motivepick.motive
+package com.motivepick.motive.tasks
 
 import android.graphics.Color
 import android.support.v7.widget.RecyclerView
@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import com.motivepick.motive.R
+import com.motivepick.motive.TaskViewHolder
 import com.motivepick.motive.model.TaskViewItem
 import java.text.SimpleDateFormat
 import java.util.*

@@ -1,4 +1,4 @@
-package com.motivepick.motive
+package com.motivepick.motive.schedule
 
 import com.motivepick.motive.model.TaskViewItem
 import org.junit.Assert.assertEquals

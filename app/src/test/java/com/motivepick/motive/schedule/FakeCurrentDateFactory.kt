@@ -1,4 +1,4 @@
-package com.motivepick.motive
+package com.motivepick.motive.schedule
 
 import com.motivepick.motive.common.CurrentDateFactory
 import java.util.*

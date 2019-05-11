@@ -1,4 +1,4 @@
-package com.motivepick.motive
+package com.motivepick.motive.schedule
 
 import android.app.Activity.RESULT_OK
 import android.arch.lifecycle.Observer
@@ -11,6 +11,8 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.motivepick.motive.R
+import com.motivepick.motive.TaskEditActivity
 import com.motivepick.motive.common.CurrentDateFactoryImpl
 import com.motivepick.motive.model.Task
 import com.motivepick.motive.model.TaskViewItem
@@ -29,7 +31,8 @@ class ScheduleFragment : Fragment() {
             val scheduleRecyclerView: RecyclerView = view!!.findViewById(R.id.scheduleRecyclerView)
             val week = WeekFactory(activity!!).createWeek()
             val scheduleFactory = ScheduleFactory(CurrentDateFactoryImpl())
-            scheduleRecyclerView.adapter = ScheduleAdapter(week, scheduleFactory.scheduleFor(tasks!!.map { TaskViewItem.from(it) }), model::closeTask, ::handleTaskClick)
+            scheduleRecyclerView.adapter =
+                ScheduleAdapter(week, scheduleFactory.scheduleFor(tasks!!.map { TaskViewItem.from(it) }), model::closeTask, ::handleTaskClick)
         })
     }
 

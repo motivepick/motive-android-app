@@ -1,4 +1,4 @@
-package com.motivepick.motive
+package com.motivepick.motive.tasks
 
 import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
@@ -15,6 +15,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import com.motivepick.motive.Keyboard
+import com.motivepick.motive.R
+import com.motivepick.motive.TaskEditActivity
 import com.motivepick.motive.model.Task
 import com.motivepick.motive.model.TaskViewItem
 import com.motivepick.motive.model.TasksViewModel

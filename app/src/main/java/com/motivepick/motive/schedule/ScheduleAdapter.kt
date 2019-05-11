@@ -1,4 +1,4 @@
-package com.motivepick.motive
+package com.motivepick.motive.schedule
 
 import android.graphics.Color
 import android.support.v7.widget.RecyclerView
@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.motivepick.motive.R
+import com.motivepick.motive.TaskViewHolder
 import com.motivepick.motive.model.Schedule
 import com.motivepick.motive.model.ScheduleSection
 import com.motivepick.motive.model.TaskViewItem
@@ -61,7 +63,13 @@ class ScheduleAdapter(private val week: Map<Int, String>, schedule: Schedule, pr
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return if (viewType == SECTION_VIEW) {
-            SectionHeaderViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.schedule_subtitle, parent, false))
+            SectionHeaderViewHolder(
+                LayoutInflater.from(parent.context).inflate(
+                    R.layout.schedule_subtitle,
+                    parent,
+                    false
+                )
+            )
         } else {
             TaskViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.task_view_item, parent, false))
         }
