@@ -36,6 +36,17 @@ class TasksViewModel(application: Application) : AndroidViewModel(application) {
         return tasks
     }
 
+    // TODO: consider calling server from this method and calling the method from task activity itself; same for task deletion
+    fun updateTask(updated: TaskViewItem) {
+        val left: List<Task> = tasks.value!!.takeWhile { it.id != updated.id }
+        val right: List<Task> = tasks.value!!.takeLastWhile { it.id != updated.id }
+        tasks.value = left + listOf(Task(updated.id, updated.name, updated.description, updated.dueDate, updated.closed)) + right
+    }
+
+    fun deleteTask(id: Long) {
+        tasks.value = tasks.value!!.filterNot { it.id == id }
+    }
+
     fun closeTask(task: TaskViewItem) {
         val application = getApplication<Application>()
         val token: Token = TokenStorage(application).getToken()

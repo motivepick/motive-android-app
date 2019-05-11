@@ -62,13 +62,11 @@ class TasksFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == TASK_EDIT_ACTICITY_REQUEST_CODE && resultCode == RESULT_OK) {
-            val tasksRecyclerView: RecyclerView = activity!!.findViewById(R.id.tasksRecyclerView)
             val id: Long = data!!.getLongExtra("deletedTaskId", Long.MIN_VALUE)
-            if (id != Long.MIN_VALUE) {
-                (tasksRecyclerView.adapter as TasksAdapter).handleTaskDeleteSuccess(id)
+            if (id == Long.MIN_VALUE) {
+                model.updateTask(data.getSerializableExtra("updatedTask") as TaskViewItem)
             } else {
-                val updatedTask: TaskViewItem = data.getSerializableExtra("updatedTask") as TaskViewItem
-                (tasksRecyclerView.adapter as TasksAdapter).handleTaskUpdateSuccess(updatedTask)
+                model.deleteTask(id)
             }
         }
     }
