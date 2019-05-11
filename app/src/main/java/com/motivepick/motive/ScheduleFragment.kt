@@ -1,7 +1,9 @@
 package com.motivepick.motive
 
+import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -16,6 +18,8 @@ import com.motivepick.motive.model.TasksViewModel
 
 class ScheduleFragment : Fragment() {
 
+    val TASK_EDIT_ACTICITY_REQUEST_CODE = 1
+
     private lateinit var model: TasksViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,7 +29,7 @@ class ScheduleFragment : Fragment() {
             val scheduleRecyclerView: RecyclerView = view!!.findViewById(R.id.scheduleRecyclerView)
             val week = WeekFactory(activity!!).createWeek()
             val scheduleFactory = ScheduleFactory(CurrentDateFactoryImpl())
-            scheduleRecyclerView.adapter = ScheduleAdapter(week, scheduleFactory.scheduleFor(tasks!!.map { TaskViewItem.from(it) }))
+            scheduleRecyclerView.adapter = ScheduleAdapter(week, scheduleFactory.scheduleFor(tasks!!.map { TaskViewItem.from(it) }), model::closeTask, ::handleTaskClick)
         })
     }
 
@@ -34,6 +38,26 @@ class ScheduleFragment : Fragment() {
         val scheduleRecyclerView: RecyclerView = view.findViewById(R.id.scheduleRecyclerView)
         scheduleRecyclerView.layoutManager = LinearLayoutManager(activity)
         return view
+    }
+
+    // TODO: DRY
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == TASK_EDIT_ACTICITY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            val id: Long = data!!.getLongExtra("deletedTaskId", Long.MIN_VALUE)
+            if (id == Long.MIN_VALUE) {
+                model.updateTask(data.getSerializableExtra("updatedTask") as TaskViewItem)
+            } else {
+                model.deleteTask(id)
+            }
+        }
+    }
+
+    // TODO: DRY
+    private fun handleTaskClick(task: TaskViewItem) {
+        val intent = Intent(activity, TaskEditActivity::class.java)
+        intent.putExtra("task", task)
+        startActivityForResult(intent, TASK_EDIT_ACTICITY_REQUEST_CODE)
     }
 
     companion object {

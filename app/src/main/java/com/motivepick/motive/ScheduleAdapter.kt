@@ -2,6 +2,7 @@ package com.motivepick.motive
 
 import android.graphics.Color
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.RecyclerView.ViewHolder
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +18,8 @@ import java.util.Calendar.DAY_OF_WEEK
 import java.util.Calendar.getInstance
 import kotlin.collections.ArrayList
 
-class ScheduleAdapter(private val week: Map<Int, String>, schedule: Schedule) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ScheduleAdapter(private val week: Map<Int, String>, schedule: Schedule, private val onTaskClose: (TaskViewItem) -> Unit, private val onTaskClick: (TaskViewItem) -> Unit) :
+    RecyclerView.Adapter<ViewHolder>() {
 
     private val SECTION_VIEW = 0
     private val CONTENT_VIEW = 1
@@ -57,7 +59,7 @@ class ScheduleAdapter(private val week: Map<Int, String>, schedule: Schedule) : 
         return calendar.get(DAY_OF_WEEK)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return if (viewType == SECTION_VIEW) {
             SectionHeaderViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.schedule_header_title, parent, false))
         } else {
@@ -71,15 +73,17 @@ class ScheduleAdapter(private val week: Map<Int, String>, schedule: Schedule) : 
         return tasks.size
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         if (SECTION_VIEW == getItemViewType(position)) {
-            val sectionHeaderViewHolder = holder as SectionHeaderViewHolder
+            val sectionHeaderViewHolder = viewHolder as SectionHeaderViewHolder
             val sectionItem = tasks[position] as Header
             sectionHeaderViewHolder.headerTitleTextView.text = sectionItem.title
         } else {
-            val itemViewHolder = holder as TaskViewHolder
+            val holder = viewHolder as TaskViewHolder
             val task = tasks[position] as TaskViewItem
-            itemViewHolder.textView.text = task.name
+            holder.checkBox.setOnClickListener { onTaskClose(task) }
+            holder.textView.text = task.name
+            holder.clickable.setOnClickListener { onTaskClick(task) }
             if (task.dueDate == null) {
                 holder.textView.gravity = Gravity.START or Gravity.CENTER_VERTICAL
                 holder.dueDateView.visibility = View.GONE
@@ -91,7 +95,7 @@ class ScheduleAdapter(private val week: Map<Int, String>, schedule: Schedule) : 
         }
     }
 
-    class SectionHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class SectionHeaderViewHolder(itemView: View) : ViewHolder(itemView) {
         var headerTitleTextView: TextView = itemView.findViewById(R.id.header_title)
     }
 }
