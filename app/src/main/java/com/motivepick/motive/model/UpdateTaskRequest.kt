@@ -1,4 +1,4 @@
-package com.motivepick.motive
+package com.motivepick.motive.model
 
 import java.util.*
 

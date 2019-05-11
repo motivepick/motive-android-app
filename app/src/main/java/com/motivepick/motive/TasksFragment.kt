@@ -17,6 +17,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import com.motivepick.motive.model.Task
 import com.motivepick.motive.model.TaskViewItem
+import com.motivepick.motive.model.TasksViewModel
 
 class TasksFragment : Fragment() {
 

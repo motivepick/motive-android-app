@@ -9,8 +9,10 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.motivepick.motive.common.CurrentDateFactoryImpl
 import com.motivepick.motive.model.Task
 import com.motivepick.motive.model.TaskViewItem
+import com.motivepick.motive.model.TasksViewModel
 
 class ScheduleFragment : Fragment() {
 
@@ -21,7 +23,8 @@ class ScheduleFragment : Fragment() {
         model = activity?.run { ViewModelProviders.of(this).get(TasksViewModel::class.java) } ?: throw Exception("invalid activity")
         model.getTasks().observe(this, Observer<List<Task>> { tasks ->
             val scheduleRecyclerView: RecyclerView = view!!.findViewById(R.id.scheduleRecyclerView)
-            scheduleRecyclerView.adapter = ScheduleAdapter(tasks!!.map { TaskViewItem.from(it) })
+            val factory = ScheduleFactory(CurrentDateFactoryImpl())
+            scheduleRecyclerView.adapter = ScheduleAdapter(factory.scheduleFor(tasks!!.map { TaskViewItem.from(it) }))
         })
     }
 

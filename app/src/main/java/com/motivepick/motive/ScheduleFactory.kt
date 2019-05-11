@@ -8,8 +8,9 @@ import kotlin.collections.LinkedHashMap
 
 class ScheduleFactory(private val currentDateFactory: CurrentDateFactory) {
 
-    fun scheduleFor(tasksWithDueDate: List<TaskViewItem>): Schedule {
+    fun scheduleFor(tasks: List<TaskViewItem>): Schedule {
         val now = currentDateFactory.now()
+        val tasksWithDueDate = tasks.filter { it.dueDate != null }
         val week: MutableMap<Date, List<TaskViewItem>> = week(now)
         for (dayOfWeek in week.keys) {
             val tasksOfTheDay = tasksWithDueDate.filter { areTheSameDay(dayOfWeek, it.dueDate!!) }

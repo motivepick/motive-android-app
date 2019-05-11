@@ -6,8 +6,10 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.EditText
+import com.motivepick.motive.model.Config
 import com.motivepick.motive.model.TaskViewItem
 import com.motivepick.motive.model.Token
+import com.motivepick.motive.model.UpdateTaskRequest
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 

@@ -5,25 +5,69 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.motivepick.motive.model.Header
+import com.motivepick.motive.model.Schedule
 import com.motivepick.motive.model.TaskViewItem
+import java.io.Serializable
+import java.util.*
+import java.util.Calendar.*
+import kotlin.collections.ArrayList
 
-
-class ScheduleAdapter(private val tasks: List<TaskViewItem>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ScheduleAdapter(schedule: Schedule) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val SECTION_VIEW = 0
     private val CONTENT_VIEW = 1
+    private val WEEK: Map<Int, String> = mapOf(
+        MONDAY to "Monday",
+        TUESDAY to "Tuesday",
+        WEDNESDAY to "Wednesday",
+        THURSDAY to "Thursday",
+        FRIDAY to "Friday",
+        SATURDAY to "Saturday",
+        SUNDAY to "Sunday"
+    )
+
+    private val tasks: List<Serializable>
+
+    init {
+        this.tasks = asTasks(schedule)
+    }
+
+    private fun asTasks(schedule: Schedule): List<Serializable> {
+        val result = ArrayList<Serializable>()
+        for (day in schedule.week.keys) {
+            val dayOfWeek = asDayOfWeek(day)
+            result.add(Header(WEEK[dayOfWeek]!!))
+            schedule.week[day]!!.forEach { result.add(it) }
+        }
+        val future = schedule.future
+        if (future.isNotEmpty()) {
+            result.add(Header("Future"))
+            future.forEach { result.add(it) }
+        }
+        val overdue = schedule.overdue
+        if (overdue.isNotEmpty()) {
+            result.add(Header("Overdue"))
+            overdue.forEach { result.add(it) }
+        }
+        return result
+    }
+
+    private fun asDayOfWeek(date: Date): Int {
+        val calendar = getInstance()
+        calendar.time = date
+        return calendar.get(DAY_OF_WEEK)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        if (viewType == SECTION_VIEW) {
-            return SectionHeaderViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.schedule_header_title, parent, false))
+        return if (viewType == SECTION_VIEW) {
+            SectionHeaderViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.schedule_header_title, parent, false))
         } else {
-            return ItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.task_view_item, parent, false))
+            ItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.task_view_item, parent, false))
         }
     }
 
-    override fun getItemViewType(position: Int): Int {
-        return if (position % 2 == 0) SECTION_VIEW else CONTENT_VIEW // TODO: get item by position and check if it is task or header
-    }
+    override fun getItemViewType(position: Int): Int = if (tasks[position] is TaskViewItem) CONTENT_VIEW else SECTION_VIEW
 
     override fun getItemCount(): Int {
         return tasks.size
@@ -32,11 +76,11 @@ class ScheduleAdapter(private val tasks: List<TaskViewItem>) : RecyclerView.Adap
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (SECTION_VIEW == getItemViewType(position)) {
             val sectionHeaderViewHolder = holder as SectionHeaderViewHolder
-            val sectionItem = tasks[position]
-            sectionHeaderViewHolder.headerTitleTextView.text = sectionItem.name
+            val sectionItem = tasks[position] as Header
+            sectionHeaderViewHolder.headerTitleTextView.text = sectionItem.title
         } else {
             val itemViewHolder = holder as ItemViewHolder
-            val task = tasks[position]
+            val task = tasks[position] as TaskViewItem
             itemViewHolder.nameTextView.text = task.name
         }
     }

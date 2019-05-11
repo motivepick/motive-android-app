@@ -1,12 +1,12 @@
-package com.motivepick.motive
+package com.motivepick.motive.model
 
 import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import com.motivepick.motive.model.Task
-import com.motivepick.motive.model.TaskViewItem
-import com.motivepick.motive.model.Token
+import com.motivepick.motive.TaskRepository
+import com.motivepick.motive.TaskRepositoryFactory
+import com.motivepick.motive.TokenStorage
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers

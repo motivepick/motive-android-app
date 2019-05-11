@@ -15,8 +15,10 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.TextView
+import com.motivepick.motive.model.Config
 import com.motivepick.motive.model.TaskViewItem
 import com.motivepick.motive.model.Token
+import com.motivepick.motive.model.UpdateTaskRequest
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.text.SimpleDateFormat

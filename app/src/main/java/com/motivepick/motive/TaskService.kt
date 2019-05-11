@@ -1,7 +1,9 @@
 package com.motivepick.motive
 
 import com.google.gson.GsonBuilder
+import com.motivepick.motive.model.Config
 import com.motivepick.motive.model.Task
+import com.motivepick.motive.model.UpdateTaskRequest
 import io.reactivex.Observable
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory

@@ -2,6 +2,7 @@ package com.motivepick.motive
 
 import com.motivepick.motive.model.Task
 import com.motivepick.motive.model.Token
+import com.motivepick.motive.model.UpdateTaskRequest
 import io.reactivex.Observable
 
 class TaskRepository(private val service: TaskService) {
