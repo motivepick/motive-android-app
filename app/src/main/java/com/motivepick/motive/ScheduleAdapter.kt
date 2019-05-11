@@ -8,8 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.motivepick.motive.model.Header
 import com.motivepick.motive.model.Schedule
+import com.motivepick.motive.model.ScheduleSection
 import com.motivepick.motive.model.TaskViewItem
 import java.io.Serializable
 import java.text.SimpleDateFormat
@@ -36,18 +36,18 @@ class ScheduleAdapter(private val week: Map<Int, String>, schedule: Schedule, pr
             val dayOfWeek = asDayOfWeek(day)
             val tasks = schedule.week[day]!!
             if (tasks.isNotEmpty()) {
-                result.add(Header(week[dayOfWeek]!!))
+                result.add(ScheduleSection(week[dayOfWeek]!!))
                 tasks.forEach { result.add(it) }
             }
         }
         val future = schedule.future
         if (future.isNotEmpty()) {
-            result.add(Header("Future"))
+            result.add(ScheduleSection("Future"))
             future.forEach { result.add(it) }
         }
         val overdue = schedule.overdue
         if (overdue.isNotEmpty()) {
-            result.add(Header("Overdue"))
+            result.add(ScheduleSection("Overdue"))
             overdue.forEach { result.add(it) }
         }
         return result
@@ -76,7 +76,7 @@ class ScheduleAdapter(private val week: Map<Int, String>, schedule: Schedule, pr
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         if (SECTION_VIEW == getItemViewType(position)) {
             val sectionHeaderViewHolder = viewHolder as SectionHeaderViewHolder
-            val sectionItem = tasks[position] as Header
+            val sectionItem = tasks[position] as ScheduleSection
             sectionHeaderViewHolder.headerTitleTextView.text = sectionItem.title
         } else {
             val holder = viewHolder as TaskViewHolder

@@ -1,6 +1,6 @@
 package com.motivepick.motive
 
-import android.app.Activity
+import android.app.Activity.RESULT_OK
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
@@ -43,7 +43,7 @@ class ScheduleFragment : Fragment() {
     // TODO: DRY
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == TASK_EDIT_ACTICITY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+        if (requestCode == TASK_EDIT_ACTICITY_REQUEST_CODE && resultCode == RESULT_OK) {
             val id: Long = data!!.getLongExtra("deletedTaskId", Long.MIN_VALUE)
             if (id == Long.MIN_VALUE) {
                 model.updateTask(data.getSerializableExtra("updatedTask") as TaskViewItem)

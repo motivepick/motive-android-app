@@ -36,7 +36,7 @@ class TasksViewModel(application: Application) : AndroidViewModel(application) {
         return tasks
     }
 
-    // TODO: consider calling server from this method and calling the method from task activity itself; same for task deletion
+    // TODO: consider calling server from this method and calling the method from task edit activity itself; same for task deletion
     fun updateTask(updated: TaskViewItem) {
         val left: List<Task> = tasks.value!!.takeWhile { it.id != updated.id }
         val right: List<Task> = tasks.value!!.takeLastWhile { it.id != updated.id }
