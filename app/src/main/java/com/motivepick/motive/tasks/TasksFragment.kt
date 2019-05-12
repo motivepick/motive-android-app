@@ -34,8 +34,7 @@ class TasksFragment : Fragment() {
         model = activity?.run { ViewModelProviders.of(this).get(TasksViewModel::class.java) } ?: throw Exception("invalid activity")
         model.getTasks().observe(this, Observer<Tasks> { tasks ->
             val tasksRecyclerView: RecyclerView = view!!.findViewById(R.id.tasksRecyclerView)
-            val list = tasks!!.getTasksToDisplay().map { Task.from(it) }
-            tasksRecyclerView.adapter = TasksAdapter(activity!!, list, tasks.closed, model::closeTask, ::handleTaskClick, model::toggleClosedTasks)
+            tasksRecyclerView.adapter = TasksAdapter(activity!!, tasks!!.getTasksToDisplay(), tasks.closed, model::closeTask, ::handleTaskClick, model::toggleClosedTasks)
         })
     }
 

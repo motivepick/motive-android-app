@@ -27,7 +27,7 @@ class TasksViewModel(application: Application) : AndroidViewModel(application) {
                 .subscribeOn(Schedulers.io())
                 .subscribe { task: TaskFromServer ->
                     val current = tasks.value!!
-                    tasks.value = Tasks(listOf(task) + current.openTasks, current.closedTasks, current.closed)
+                    tasks.value = Tasks(listOf(Task.from(task)) + current.openTasks, current.closedTasks, current.closed)
                     onTaskCreated()
                 }
         }
@@ -41,11 +41,11 @@ class TasksViewModel(application: Application) : AndroidViewModel(application) {
         tasks.value = Tasks(update(current.openTasks, updated), update(current.closedTasks, updated), current.closed)
     }
 
-    private fun update(tasks: List<TaskFromServer>, updated: Task): List<TaskFromServer> {
-        val left: List<TaskFromServer> = tasks.takeWhile { it.id != updated.id }
-        val right: List<TaskFromServer> = tasks.takeLastWhile { it.id != updated.id }
+    private fun update(tasks: List<Task>, updated: Task): List<Task> {
+        val left: List<Task> = tasks.takeWhile { it.id != updated.id }
+        val right: List<Task> = tasks.takeLastWhile { it.id != updated.id }
         val found = left.size + right.size < tasks.size
-        return if (found) left + listOf(TaskFromServer(updated.id, updated.name, updated.description, updated.dueDate, updated.closed)) + right else tasks
+        return if (found) left + listOf(Task(updated.id, updated.name, updated.description, updated.dueDate, updated.closed)) + right else tasks
     }
 
     fun deleteTask(id: Long) {
@@ -63,9 +63,9 @@ class TasksViewModel(application: Application) : AndroidViewModel(application) {
             .subscribe { response ->
                 val current = tasks.value!!
                 if (response.closed) {
-                    tasks.value = Tasks(current.openTasks.filterNot { it.id == response.id }, listOf(response) + current.closedTasks, current.closed)
+                    tasks.value = Tasks(current.openTasks.filterNot { it.id == response.id }, listOf(Task.from(response)) + current.closedTasks, current.closed)
                 } else {
-                    tasks.value = Tasks(listOf(response) + current.openTasks, current.closedTasks.filterNot { it.id == response.id }, current.closed)
+                    tasks.value = Tasks(listOf(Task.from(response)) + current.openTasks, current.closedTasks.filterNot { it.id == response.id }, current.closed)
                 }
             }
     }
@@ -83,7 +83,8 @@ class TasksViewModel(application: Application) : AndroidViewModel(application) {
         val disposable = observable.observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe { response ->
-                tasks.value = Tasks(response.filterNot { it.closed }, response.filter { it.closed }, false)
+                val mapped = response.map { Task.from(it) }
+                tasks.value = Tasks(mapped.filterNot { it.closed }, mapped.filter { it.closed }, false)
             }
     }
 }
