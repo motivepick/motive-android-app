@@ -24,7 +24,6 @@ import io.reactivex.schedulers.Schedulers
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 class TaskEditActivity : AppCompatActivity() {
 
     val TASK_DESCRIPTION_EDIT_ACTICITY_REQUEST_CODE = 2

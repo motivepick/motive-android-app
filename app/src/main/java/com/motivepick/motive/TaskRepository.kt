@@ -7,8 +7,6 @@ import io.reactivex.Observable
 
 class TaskRepository(private val service: TaskService) {
 
-    fun searchTasks(token: Token, closed: Boolean): Observable<List<TaskFromServer>> = service.search(token.toCookie(), closed)
-
     fun searchTasks(token: Token): Observable<List<TaskFromServer>> = service.search(token.toCookie())
 
     fun createTask(token: Token, task: TaskFromServer): Observable<TaskFromServer> = service.create(token.toCookie(), task)

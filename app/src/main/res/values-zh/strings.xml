@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Motive</string>
+    <string name="title_tasks">待辦事項</string>
+    <plurals name="subtitle_tasks_section">
+        <item quantity="other">%d 個待辦事項</item>
+    </plurals>
+    <string name="button_show_closed_tasks">顯示已完成事項</string>
+    <string name="button_show_open_tasks">顯示進行中事項</string>
+    <string name="title_schedule">行程表</string>
+    <string name="title_schedule_section">行程表</string>
+    <string name="title_account">帳戶</string>
+    <string name="title_edit_task">編輯</string>
+    <string name="title_edit_description">編輯</string>
+    <string name="menu_delete_task">刪除任務</string>
+    <string name="button_login_with_facebook">以Facebook登入</string>
+    <string name="button_login_with_vk">以VK登入</string>
+    <string name="hint_create_new_task">添加新任務</string>
+    <string name="hint_when_is_it_due">何時要完成?</string>
+    <string name="hint_place_for_your_notes">更多細節…</string>
+    <string name="button_clear_date">清除</string>
+    <string name="title_monday">星期一</string>
+    <string name="title_tuesday">星期二</string>
+    <string name="title_wednesday">星期三</string>
+    <string name="title_thursday">星期四</string>
+    <string name="title_friday">星期五</string>
+    <string name="title_saturday">星期六</string>
+    <string name="title_sunday">星期日</string>
+    <string name="title_future">下一個</string>
+    <string name="title_overdue">過期</string>
+    <string name="button_logout">登出</string>
+</resources>
