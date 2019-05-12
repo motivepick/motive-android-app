@@ -13,8 +13,8 @@ import io.reactivex.schedulers.Schedulers
 
 class TasksViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val tasks: MutableLiveData<List<TaskFromServer>> by lazy {
-        MutableLiveData<List<TaskFromServer>>().also { loadTasks(closed) }
+    private val tasks: MutableLiveData<Tasks> by lazy {
+        MutableLiveData<Tasks>().also { loadTasks() }
     }
 
     private var closed = false
@@ -28,25 +28,32 @@ class TasksViewModel(application: Application) : AndroidViewModel(application) {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe { task: TaskFromServer ->
-                    tasks.value = listOf(task) + tasks.value!!
+                    tasks.value = Tasks(listOf(task) + tasks.value!!.open, tasks.value!!.closed)
                     onTaskCreated()
                 }
         }
     }
 
-    fun getTasks(): LiveData<List<TaskFromServer>> = tasks
+    fun getTasks(): LiveData<Tasks> = tasks
 
     fun getClosed(): Boolean = closed
 
     // TODO: consider calling server from this method and calling the method from task edit activity itself; same for task deletion
     fun updateTask(updated: Task) {
-        val left: List<TaskFromServer> = tasks.value!!.takeWhile { it.id != updated.id }
-        val right: List<TaskFromServer> = tasks.value!!.takeLastWhile { it.id != updated.id }
-        tasks.value = left + listOf(TaskFromServer(updated.id, updated.name, updated.description, updated.dueDate, updated.closed)) + right
+        val current = tasks.value!!
+        tasks.value = Tasks(update(current.open, updated), update(current.closed, updated))
+    }
+
+    private fun update(tasks: List<TaskFromServer>, updated: Task): List<TaskFromServer> {
+        val left: List<TaskFromServer> = tasks.takeWhile { it.id != updated.id }
+        val right: List<TaskFromServer> = tasks.takeLastWhile { it.id != updated.id }
+        val found = left.size + right.size < tasks.size
+        return if (found) left + listOf(TaskFromServer(updated.id, updated.name, updated.description, updated.dueDate, updated.closed)) + right else tasks
     }
 
     fun deleteTask(id: Long) {
-        tasks.value = tasks.value!!.filterNot { it.id == id }
+        val current = tasks.value!!
+        tasks.value = Tasks(current.open.filterNot { it.id == id }, current.closed.filterNot { it.id == id })
     }
 
     fun closeTask(task: Task) {
@@ -57,24 +64,29 @@ class TasksViewModel(application: Application) : AndroidViewModel(application) {
         val disposable = observable.observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe { response ->
-                tasks.value = tasks.value!!.filterNot { it.id == response.id }
+                val current = tasks.value!!
+                if (response.closed) {
+                    tasks.value = Tasks(current.open.filterNot { it.id == response.id }, listOf(response) + current.closed)
+                } else {
+                    tasks.value = Tasks(listOf(response) + current.open, current.closed.filterNot { it.id == response.id })
+                }
             }
     }
 
     fun toggleClosedTasks() {
         closed = !closed
-        loadTasks(closed)
+        tasks.value = tasks.value
     }
 
-    private fun loadTasks(closed: Boolean) {
+    private fun loadTasks() {
         val application = getApplication<Application>()
         val token: Token = TokenStorage(application).getToken()
         val repository: TaskRepository = TaskRepositoryFactory.create(Config(application))
-        val observable: Observable<List<TaskFromServer>> = repository.searchTasks(token, closed)
+        val observable: Observable<List<TaskFromServer>> = repository.searchTasks(token)
         val disposable = observable.observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe {
-                tasks.value = it
+            .subscribe { response ->
+                tasks.value = Tasks(response.filterNot { it.closed }, response.filter { it.closed })
             }
     }
 }

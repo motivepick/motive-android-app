@@ -19,7 +19,7 @@ import com.motivepick.motive.Keyboard
 import com.motivepick.motive.R
 import com.motivepick.motive.TaskEditActivity
 import com.motivepick.motive.model.Task
-import com.motivepick.motive.model.TaskFromServer
+import com.motivepick.motive.model.Tasks
 import com.motivepick.motive.model.TasksViewModel
 
 class TasksFragment : Fragment() {
@@ -32,9 +32,10 @@ class TasksFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         model = activity?.run { ViewModelProviders.of(this).get(TasksViewModel::class.java) } ?: throw Exception("invalid activity")
-        model.getTasks().observe(this, Observer<List<TaskFromServer>> { tasks ->
+        model.getTasks().observe(this, Observer<Tasks> { tasks ->
+            val list = if (model.getClosed()) tasks!!.closed else tasks!!.open
             val tasksRecyclerView: RecyclerView = view!!.findViewById(R.id.tasksRecyclerView)
-            tasksRecyclerView.adapter = TasksAdapter(activity!!, tasks!!.map { Task.from(it) }, model.getClosed(), model::closeTask, ::handleTaskClick, model::toggleClosedTasks)
+            tasksRecyclerView.adapter = TasksAdapter(activity!!, list.map { Task.from(it) }, model.getClosed(), model::closeTask, ::handleTaskClick, model::toggleClosedTasks)
         })
     }
 

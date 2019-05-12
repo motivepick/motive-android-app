@@ -15,6 +15,9 @@ interface TaskService {
     @GET("/tasks")
     fun search(@Header("Cookie") cookie: String, @Query("closed") closed: Boolean): Observable<List<TaskFromServer>>
 
+    @GET("/tasks")
+    fun search(@Header("Cookie") cookie: String): Observable<List<TaskFromServer>>
+
     @POST("/tasks")
     fun create(@Header("Cookie") cookie: String, @Body task: TaskFromServer): Observable<TaskFromServer>
 
