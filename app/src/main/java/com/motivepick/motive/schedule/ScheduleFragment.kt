@@ -30,7 +30,7 @@ class ScheduleFragment : Fragment() {
         model.getTasks().observe(this, Observer<Tasks> { tasks ->
             val scheduleRecyclerView: RecyclerView = view!!.findViewById(R.id.scheduleRecyclerView)
             val scheduleFactory = ScheduleFactory(CurrentDateFactoryImpl())
-            scheduleRecyclerView.adapter = ScheduleAdapter(activity!!, scheduleFactory.scheduleFor(tasks!!.open.map { Task.from(it) }), model::closeTask, ::handleTaskClick)
+            scheduleRecyclerView.adapter = ScheduleAdapter(activity!!, scheduleFactory.scheduleFor(tasks!!.openTasks.map { Task.from(it) }), model::closeTask, ::handleTaskClick)
         })
     }
 
