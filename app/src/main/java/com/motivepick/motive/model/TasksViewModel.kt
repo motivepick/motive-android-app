@@ -13,8 +13,8 @@ import io.reactivex.schedulers.Schedulers
 
 class TasksViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val tasks: MutableLiveData<Tasks> by lazy {
-        MutableLiveData<Tasks>().also { loadTasks() }
+    private val state: MutableLiveData<State> by lazy {
+        MutableLiveData<State>().also { loadTasks() }
     }
 
     fun createTask(name: String, onTaskCreated: () -> Unit) {
@@ -26,19 +26,19 @@ class TasksViewModel(application: Application) : AndroidViewModel(application) {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe { task: TaskFromServer ->
-                    val current = tasks.value!!
-                    tasks.value = Tasks(listOf(Task.from(task)) + current.openTasks, current.closedTasks, current.closed)
+                    val current = state.value!!
+                    state.value = State(listOf(Task.from(task)) + current.openTasks, current.closedTasks, current.closed)
                     onTaskCreated()
                 }
         }
     }
 
-    fun getTasks(): LiveData<Tasks> = tasks
+    fun getState(): LiveData<State> = state
 
     // TODO: consider calling server from this method and calling the method from task edit activity itself; same for task deletion
     fun updateTask(updated: Task) {
-        val current = tasks.value!!
-        tasks.value = Tasks(update(current.openTasks, updated), update(current.closedTasks, updated), current.closed)
+        val current = state.value!!
+        state.value = State(update(current.openTasks, updated), update(current.closedTasks, updated), current.closed)
     }
 
     private fun update(tasks: List<Task>, updated: Task): List<Task> {
@@ -49,8 +49,8 @@ class TasksViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun deleteTask(id: Long) {
-        val current = tasks.value!!
-        tasks.value = Tasks(current.openTasks.filterNot { it.id == id }, current.closedTasks.filterNot { it.id == id }, current.closed)
+        val current = state.value!!
+        state.value = State(current.openTasks.filterNot { it.id == id }, current.closedTasks.filterNot { it.id == id }, current.closed)
     }
 
     fun closeTask(task: Task) {
@@ -61,18 +61,18 @@ class TasksViewModel(application: Application) : AndroidViewModel(application) {
         val disposable = observable.observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe { response ->
-                val current = tasks.value!!
-                if (response.closed) {
-                    tasks.value = Tasks(current.openTasks.filterNot { it.id == response.id }, listOf(Task.from(response)) + current.closedTasks, current.closed)
+                val current = state.value!!
+                state.value = if (response.closed) {
+                    State(current.openTasks.filterNot { it.id == response.id }, listOf(Task.from(response)) + current.closedTasks, current.closed)
                 } else {
-                    tasks.value = Tasks(listOf(Task.from(response)) + current.openTasks, current.closedTasks.filterNot { it.id == response.id }, current.closed)
+                    State(listOf(Task.from(response)) + current.openTasks, current.closedTasks.filterNot { it.id == response.id }, current.closed)
                 }
             }
     }
 
     fun toggleClosedTasks() {
-        val current = tasks.value!!
-        tasks.value = Tasks(current.openTasks, current.closedTasks, !current.closed)
+        val current = state.value!!
+        state.value = State(current.openTasks, current.closedTasks, !current.closed)
     }
 
     private fun loadTasks() {
@@ -83,8 +83,8 @@ class TasksViewModel(application: Application) : AndroidViewModel(application) {
         val disposable = observable.observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe { response ->
-                val mapped = response.map { Task.from(it) }
-                tasks.value = Tasks(mapped.filterNot { it.closed }, mapped.filter { it.closed }, false)
+                val tasks = response.map { Task.from(it) }
+                state.value = State(tasks.filterNot { it.closed }, tasks.filter { it.closed }, false)
             }
     }
 }

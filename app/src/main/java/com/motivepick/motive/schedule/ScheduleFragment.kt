@@ -14,8 +14,8 @@ import android.view.ViewGroup
 import com.motivepick.motive.R
 import com.motivepick.motive.TaskEditActivity
 import com.motivepick.motive.common.CurrentDateFactoryImpl
+import com.motivepick.motive.model.State
 import com.motivepick.motive.model.Task
-import com.motivepick.motive.model.Tasks
 import com.motivepick.motive.model.TasksViewModel
 
 class ScheduleFragment : Fragment() {
@@ -27,10 +27,10 @@ class ScheduleFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         model = activity?.run { ViewModelProviders.of(this).get(TasksViewModel::class.java) } ?: throw Exception("invalid activity")
-        model.getTasks().observe(this, Observer<Tasks> { tasks ->
+        model.getState().observe(this, Observer<State> { state ->
             val scheduleRecyclerView: RecyclerView = view!!.findViewById(R.id.scheduleRecyclerView)
             val scheduleFactory = ScheduleFactory(CurrentDateFactoryImpl())
-            scheduleRecyclerView.adapter = ScheduleAdapter(activity!!, scheduleFactory.scheduleFor(tasks!!.openTasks), model::closeTask, ::handleTaskClick)
+            scheduleRecyclerView.adapter = ScheduleAdapter(activity!!, scheduleFactory.scheduleFor(state!!.openTasks), model::closeTask, ::handleTaskClick)
         })
     }
 
