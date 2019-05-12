@@ -1,5 +1,6 @@
 package com.motivepick.motive.schedule
 
+import android.content.Context
 import android.graphics.Color
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.ViewHolder
@@ -16,17 +17,25 @@ import com.motivepick.motive.model.Task
 import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.Calendar.DAY_OF_WEEK
-import java.util.Calendar.getInstance
+import java.util.Calendar.*
 import kotlin.collections.ArrayList
 
-class ScheduleAdapter(private val week: Map<Int, String>, schedule: Schedule, private val onTaskClose: (Task) -> Unit, private val onTaskClick: (Task) -> Unit) :
+class ScheduleAdapter(private val context: Context, schedule: Schedule, private val onTaskClose: (Task) -> Unit, private val onTaskClick: (Task) -> Unit) :
     RecyclerView.Adapter<ViewHolder>() {
 
     private val SECTION_VIEW = 0
     private val CONTENT_VIEW = 1
 
     private val tasks: List<Serializable>
+    private val week: Map<Int, String> = mapOf(
+        MONDAY to context.getString(R.string.title_monday),
+        TUESDAY to context.getString(R.string.title_tuesday),
+        WEDNESDAY to context.getString(R.string.title_wednesday),
+        THURSDAY to context.getString(R.string.title_thursday),
+        FRIDAY to context.getString(R.string.title_friday),
+        SATURDAY to context.getString(R.string.title_saturday),
+        SUNDAY to context.getString(R.string.title_sunday)
+    )
 
     init {
         this.tasks = asTasks(schedule)
@@ -44,12 +53,12 @@ class ScheduleAdapter(private val week: Map<Int, String>, schedule: Schedule, pr
         }
         val future = schedule.future
         if (future.isNotEmpty()) {
-            result.add(ScheduleSection("Next"))
+            result.add(ScheduleSection(context.getString(R.string.title_future)))
             future.forEach { result.add(it) }
         }
         val overdue = schedule.overdue
         if (overdue.isNotEmpty()) {
-            result.add(ScheduleSection("Overdue"))
+            result.add(ScheduleSection(context.getString(R.string.title_overdue)))
             overdue.forEach { result.add(it) }
         }
         return result

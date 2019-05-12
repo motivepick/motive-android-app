@@ -29,5 +29,7 @@
     <string name="title_friday">Пятница</string>
     <string name="title_saturday">Суббота</string>
     <string name="title_sunday">Воскресенье</string>
+    <string name="title_future">Дальше</string>
+    <string name="title_overdue">Просроченные</string>
     <string name="button_logout">Выйти</string>
 </resources>

@@ -27,5 +27,7 @@
     <string name="title_friday">Friday</string>
     <string name="title_saturday">Saturday</string>
     <string name="title_sunday">Sunday</string>
+    <string name="title_future">Next</string>
+    <string name="title_overdue">Overdue</string>
     <string name="button_logout">Logout</string>
 </resources>
