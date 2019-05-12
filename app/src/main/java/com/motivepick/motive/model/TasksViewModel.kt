@@ -14,8 +14,10 @@ import io.reactivex.schedulers.Schedulers
 class TasksViewModel(application: Application) : AndroidViewModel(application) {
 
     private val tasks: MutableLiveData<List<TaskFromServer>> by lazy {
-        MutableLiveData<List<TaskFromServer>>().also { loadTasks() }
+        MutableLiveData<List<TaskFromServer>>().also { loadTasks(closed) }
     }
+
+    private var closed = false
 
     fun createTask(name: String, onTaskCreated: () -> Unit) {
         val application = getApplication<Application>()
@@ -32,9 +34,9 @@ class TasksViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun getTasks(): LiveData<List<TaskFromServer>> {
-        return tasks
-    }
+    fun getTasks(): LiveData<List<TaskFromServer>> = tasks
+
+    fun getClosed(): Boolean = closed
 
     // TODO: consider calling server from this method and calling the method from task edit activity itself; same for task deletion
     fun updateTask(updated: Task) {
@@ -51,23 +53,24 @@ class TasksViewModel(application: Application) : AndroidViewModel(application) {
         val application = getApplication<Application>()
         val token: Token = TokenStorage(application).getToken()
         val repository: TaskRepository = TaskRepositoryFactory.create(Config(application))
-        if (task.closed) repository.undoCloseTask(token, task.id) else repository.closeTask(token, task.id)
-            .observeOn(AndroidSchedulers.mainThread())
+        val observable: Observable<TaskFromServer> = if (task.closed) repository.undoCloseTask(token, task.id) else repository.closeTask(token, task.id)
+        val disposable = observable.observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe { response ->
-                if (response.closed) {
-                    tasks.value = tasks.value!!.filterNot { it.id == response.id }
-                } else {
-                    throw Exception("not yet implemented")
-                }
+                tasks.value = tasks.value!!.filterNot { it.id == response.id }
             }
     }
 
-    private fun loadTasks() {
+    fun toggleClosedTasks() {
+        closed = !closed
+        loadTasks(closed)
+    }
+
+    private fun loadTasks(closed: Boolean) {
         val application = getApplication<Application>()
         val token: Token = TokenStorage(application).getToken()
         val repository: TaskRepository = TaskRepositoryFactory.create(Config(application))
-        val observable: Observable<List<TaskFromServer>> = repository.searchTasks(token, false)
+        val observable: Observable<List<TaskFromServer>> = repository.searchTasks(token, closed)
         val disposable = observable.observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe {

@@ -1,7 +1,7 @@
 package com.motivepick.motive.tasks
 
 import android.content.Context
-import android.graphics.Color
+import android.graphics.Paint.STRIKE_THRU_TEXT_FLAG
 import android.support.v7.widget.RecyclerView.Adapter
 import android.support.v7.widget.RecyclerView.ViewHolder
 import android.view.Gravity.CENTER_VERTICAL
@@ -21,7 +21,8 @@ import java.util.*
 
 class TasksAdapter(
     private val context: Context,
-    private var tasks: List<Task>,
+    private val tasks: List<Task>,
+    private val closed: Boolean,
     private val onTaskClose: (Task) -> Unit,
     private val onTaskClick: (Task) -> Unit,
     private val onShowClosedTasksClick: () -> Unit
@@ -31,11 +32,10 @@ class TasksAdapter(
     private val CONTENT_VIEW = 1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        if (viewType == SECTION_VIEW) {
-            return SectionHeaderViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.tasks_subtitle, parent, false))
+        return if (viewType == SECTION_VIEW) {
+            SectionHeaderViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.tasks_subtitle, parent, false))
         } else {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.task_view_item, parent, false)
-            return TaskViewHolder(view)
+            TaskViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.task_view_item, parent, false))
         }
     }
 
@@ -44,14 +44,20 @@ class TasksAdapter(
             val size = tasks.size
             val holder = viewHolder as SectionHeaderViewHolder
             holder.numberOfTasksTextView.text = context.resources.getQuantityString(R.plurals.subtitle_tasks_section, size, size)
+            holder.showClosedTasksButton.text = context.getString(if (closed) R.string.button_show_open_tasks else R.string.button_show_closed_tasks)
             holder.showClosedTasksButton.setOnClickListener {
                 onShowClosedTasksClick()
             }
         } else {
             val holder = viewHolder as TaskViewHolder
             val task = tasks[position - 1]
+            val color = task.getColor()
             holder.checkBox.setOnClickListener { onTaskClose(task) }
             holder.textView.text = task.name
+            if (task.closed) {
+                holder.textView.setTextColor(color)
+                holder.textView.paintFlags = holder.textView.paintFlags or STRIKE_THRU_TEXT_FLAG
+            }
             holder.clickable.setOnClickListener { onTaskClick(task) }
             if (task.dueDate == null) {
                 holder.textView.gravity = START or CENTER_VERTICAL
@@ -59,7 +65,7 @@ class TasksAdapter(
             } else {
                 holder.dueDateView.visibility = VISIBLE
                 holder.dueDateView.text = SimpleDateFormat("dd.MM.yyyy", Locale.US).format(task.dueDate)
-                holder.dueDateView.setTextColor(if (task.isOverdue()) Color.parseColor("#E35446") else Color.parseColor("#78D174"))
+                holder.dueDateView.setTextColor(color)
             }
         }
     }

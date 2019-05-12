@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity
 
 class EntryActivity : AppCompatActivity() {
 
+    private val NO_ANIMATION = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val launchIntent = Intent()
@@ -17,6 +19,7 @@ class EntryActivity : AppCompatActivity() {
 
         launchIntent.setClass(applicationContext, launchActivity)
         startActivity(launchIntent)
+        overridePendingTransition(NO_ANIMATION, NO_ANIMATION)
 
         finish()
     }
