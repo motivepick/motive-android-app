@@ -14,9 +14,11 @@
         android:layout_marginTop="16dp" android:layout_marginLeft="16dp" android:layout_marginStart="16dp"/>
     <Button
         android:text="@string/button_logout"
+        android:background="?android:attr/selectableItemBackground"
+        android:layout_weight="0" android:minHeight="36dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" android:id="@+id/logoutButton"
-        app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp" android:layout_marginRight="16dp" app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </android.support.constraint.ConstraintLayout>

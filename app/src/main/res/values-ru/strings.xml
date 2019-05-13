@@ -14,7 +14,7 @@
     <string name="title_schedule_section">График</string>
     <string name="title_account">Аккаунт</string>
     <string name="title_edit_task">Редактировать задачу</string>
-    <string name="title_edit_description">Редактироват заметки</string>
+    <string name="title_edit_description">Редактировать заметки</string>
     <string name="menu_delete_task">Удалить задачу</string>
     <string name="button_login_with_facebook">Войти с Facebook</string>
     <string name="button_login_with_vk">Войти c VK</string>

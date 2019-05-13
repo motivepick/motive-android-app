@@ -3,4 +3,5 @@
     <color name="colorPrimary">#EC445A</color>
     <color name="colorGrey">#8E8E93</color>
     <color name="colorMidGrey">#C7C7CC</color>
+    <color name="colorDescription">#F2ECE7</color>
 </resources>

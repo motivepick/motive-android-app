@@ -54,7 +54,7 @@ class TaskEditActivity : AppCompatActivity() {
                     .subscribe({ task ->
                         this.task = Task(this.task!!.id, task.name, this.task!!.description, this.task!!.dueDate, this.task!!.closed)
                     }, { Log.e("Tasks", "Error happened $it") })
-                val manager = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                val manager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 manager.hideSoftInputFromWindow(view.windowToken, 0)
                 true
             } else {
