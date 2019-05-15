@@ -15,10 +15,9 @@
     <Button
         android:text="@string/button_logout"
         android:background="?android:attr/selectableItemBackground"
-        android:layout_weight="0" android:minHeight="36dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" android:id="@+id/logoutButton"
-        app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="24dp"
+        app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"/>
 
 </android.support.constraint.ConstraintLayout>
