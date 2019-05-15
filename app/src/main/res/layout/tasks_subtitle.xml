@@ -12,5 +12,5 @@
         android:text="@string/button_show_closed_tasks"
         android:background="?android:attr/selectableItemBackground"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" android:id="@+id/button2" android:textColor="@color/colorPrimary" android:layout_weight="0" android:minHeight="36dp"/>
+        android:layout_height="wrap_content" android:id="@+id/button2" android:textColor="@color/colorPrimary"/>
 </LinearLayout>
