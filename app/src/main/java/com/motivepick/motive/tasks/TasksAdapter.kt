@@ -21,8 +21,8 @@ import java.util.*
 
 class TasksAdapter(
     private val context: Context,
-    private val tasks: List<Task>,
-    private val closed: Boolean,
+    private var tasks: List<Task>,
+    private var closed: Boolean,
     private val onTaskClose: (Task) -> Unit,
     private val onTaskClick: (Task) -> Unit,
     private val onShowClosedTasksClick: () -> Unit
@@ -51,13 +51,10 @@ class TasksAdapter(
         } else {
             val holder = viewHolder as TaskViewHolder
             val task = tasks[position - 1]
-            val color = task.getColor()
             holder.checkBox.setOnClickListener { onTaskClose(task) }
             holder.textView.text = task.name
-            if (task.closed) {
-                holder.textView.setTextColor(color)
-                holder.textView.paintFlags = holder.textView.paintFlags or STRIKE_THRU_TEXT_FLAG
-            }
+            holder.textView.setTextColor(task.getNameColor())
+            holder.textView.paintFlags = if (task.closed) holder.textView.paintFlags or STRIKE_THRU_TEXT_FLAG else holder.textView.paintFlags and STRIKE_THRU_TEXT_FLAG.inv()
             holder.clickable.setOnClickListener { onTaskClick(task) }
             if (task.dueDate == null) {
                 holder.textView.gravity = START or CENTER_VERTICAL
@@ -65,7 +62,7 @@ class TasksAdapter(
             } else {
                 holder.dueDateView.visibility = VISIBLE
                 holder.dueDateView.text = SimpleDateFormat("dd.MM.yyyy", Locale.US).format(task.dueDate)
-                holder.dueDateView.setTextColor(color)
+                holder.dueDateView.setTextColor(task.getDueDateColor())
             }
         }
     }
@@ -73,6 +70,12 @@ class TasksAdapter(
     override fun getItemViewType(position: Int): Int = if (position == 0) SECTION_VIEW else CONTENT_VIEW
 
     override fun getItemCount(): Int = tasks.size + 1
+
+    fun setTasks(tasks: List<Task>, closed: Boolean) {
+        this.tasks = tasks
+        this.closed = closed
+        notifyDataSetChanged()
+    }
 
     class SectionHeaderViewHolder(itemView: View) : ViewHolder(itemView) {
         val numberOfTasksTextView: TextView = itemView.findViewById(R.id.number_of_tasks)

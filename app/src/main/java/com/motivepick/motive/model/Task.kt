@@ -15,5 +15,7 @@ data class Task(val id: Long, val name: String, val description: String, val due
         return if (dueDate == null) false else Date().time > dueDate.time
     }
 
-    fun getColor(): Int = if (closed) Color.parseColor("#8E8E93") else if (isOverdue()) Color.parseColor("#E35446") else Color.parseColor("#78D174")
+    fun getNameColor(): Int = if (closed) Color.parseColor("#8E8E93") else Color.parseColor("#000000")
+
+    fun getDueDateColor(): Int = if (closed) Color.parseColor("#8E8E93") else if (isOverdue()) Color.parseColor("#E35446") else Color.parseColor("#78D174")
 }

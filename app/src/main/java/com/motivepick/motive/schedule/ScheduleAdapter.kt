@@ -1,7 +1,6 @@
 package com.motivepick.motive.schedule
 
 import android.content.Context
-import android.graphics.Color
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.ViewHolder
 import android.view.Gravity
@@ -26,7 +25,7 @@ class ScheduleAdapter(private val context: Context, schedule: Schedule, private 
     private val SECTION_VIEW = 0
     private val CONTENT_VIEW = 1
 
-    private val tasks: List<Serializable>
+    private var tasks: List<Serializable>
     private val week: Map<Int, String> = mapOf(
         MONDAY to context.getString(R.string.title_monday),
         TUESDAY to context.getString(R.string.title_tuesday),
@@ -101,9 +100,14 @@ class ScheduleAdapter(private val context: Context, schedule: Schedule, private 
             } else {
                 holder.dueDateView.visibility = View.VISIBLE
                 holder.dueDateView.text = SimpleDateFormat("dd.MM.yyyy", Locale.US).format(task.dueDate)
-                holder.dueDateView.setTextColor(if (task.isOverdue()) Color.parseColor("#E35446") else Color.parseColor("#78D174"))
+                holder.dueDateView.setTextColor(task.getDueDateColor())
             }
         }
+    }
+
+    fun setSchedule(schedule: Schedule) {
+        this.tasks = asTasks(schedule)
+        notifyDataSetChanged()
     }
 
     class SectionHeaderViewHolder(itemView: View) : ViewHolder(itemView) {

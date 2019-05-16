@@ -34,7 +34,8 @@ class TasksFragment : Fragment() {
         model = activity?.run { ViewModelProviders.of(this).get(TasksViewModel::class.java) } ?: throw Exception("invalid activity")
         model.getState().observe(this, Observer<State> { state ->
             val tasksRecyclerView: RecyclerView = view!!.findViewById(R.id.tasksRecyclerView)
-            tasksRecyclerView.adapter = TasksAdapter(activity!!, state!!.getTasks(), state.closed, model::closeTask, ::handleTaskClick, model::toggleClosedTasks)
+            val adapter = tasksRecyclerView.adapter as TasksAdapter
+            adapter.setTasks(state!!.getTasks(), state.closed)
         })
     }
 
@@ -44,6 +45,7 @@ class TasksFragment : Fragment() {
 
         val tasksRecyclerView: RecyclerView = view.findViewById(R.id.tasksRecyclerView)
         tasksRecyclerView.layoutManager = LinearLayoutManager(activity)
+        tasksRecyclerView.adapter = TasksAdapter(activity!!, emptyList(), false, model::closeTask, ::handleTaskClick, model::toggleClosedTasks)
 
         val taskNameEditText: EditText = view.findViewById(R.id.taskNameEditText) as EditText
         taskNameEditText.setOnEditorActionListener { textView, actionId, event ->
