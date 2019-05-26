@@ -1,6 +1,6 @@
-package com.motivepick.motive.schedule
+package com.motivemobileapp.schedule
 
-import com.motivepick.motive.model.Task
+import com.motivemobileapp.model.Task
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.util.*

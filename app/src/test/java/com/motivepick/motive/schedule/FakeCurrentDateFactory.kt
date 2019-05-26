@@ -1,6 +1,6 @@
-package com.motivepick.motive.schedule
+package com.motivemobileapp.schedule
 
-import com.motivepick.motive.common.CurrentDateFactory
+import com.motivemobileapp.common.CurrentDateFactory
 import java.util.*
 
 class FakeCurrentDateFactory(private val year: Int, private val month: Int, private val dayOfMonth: Int, private val hour: Int, private val minute: Int) :
