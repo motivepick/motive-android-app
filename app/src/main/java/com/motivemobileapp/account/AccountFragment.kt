@@ -19,6 +19,7 @@ class AccountFragment : Fragment() {
         logoutButton.setOnClickListener {
             TokenStorage(activity).removeToken()
             startActivity(Intent(activity, LoginActivity::class.java))
+            activity!!.finish()
         }
         return view
     }

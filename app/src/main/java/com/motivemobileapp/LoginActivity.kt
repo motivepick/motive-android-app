@@ -36,8 +36,8 @@ class LoginActivity : AppCompatActivity() {
     private fun handleIntent(intent: Intent) {
         if (intent.action == Intent.ACTION_VIEW) {
             TokenStorage(this).storeToken(Token(intent.data))
-            finish()
             startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+            finish()
         }
     }
 }

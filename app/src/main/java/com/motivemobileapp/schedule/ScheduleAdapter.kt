@@ -1,6 +1,7 @@
 package com.motivemobileapp.schedule
 
 import android.content.Context
+import android.graphics.Paint
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.ViewHolder
 import android.view.Gravity
@@ -91,8 +92,12 @@ class ScheduleAdapter(private val context: Context, schedule: Schedule, private 
         } else {
             val holder = viewHolder as TaskViewHolder
             val task = tasks[position] as Task
-            holder.checkBox.setOnClickListener { onTaskClose(task) }
+            holder.checkBox.setOnClickListener {
+                holder.textView.paintFlags = holder.textView.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                onTaskClose(task)
+            }
             holder.textView.text = task.name
+            holder.textView.paintFlags = if (task.closed) holder.textView.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG else holder.textView.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
             holder.clickable.setOnClickListener { onTaskClick(task) }
             if (task.dueDate == null) {
                 holder.textView.gravity = Gravity.START or Gravity.CENTER_VERTICAL
