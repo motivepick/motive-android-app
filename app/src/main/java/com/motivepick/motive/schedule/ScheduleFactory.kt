@@ -27,7 +27,7 @@ class ScheduleFactory(private val currentDateFactory: CurrentDateFactory) {
             .firstOrNull()
 
         return if (firstFutureTaskOrNull == null) {
-            Schedule(week, overdue, listOf())
+            Schedule(week, overdue, emptyList())
         } else {
             val futureTasks = tasksWithDueDate.filter { areTheSameDay(firstFutureTaskOrNull.dueDate!!, it.dueDate!!) }
             Schedule(week, overdue, futureTasks)
