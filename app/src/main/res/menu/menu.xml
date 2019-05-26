@@ -7,6 +7,7 @@
         android:icon="@drawable/ic_home_black_24dp"
         android:title="@string/menu_delete_task"
         app:showAsAction="always"
-        android:orderInCategory="0"/>
+        android:orderInCategory="0"
+        android:visible="false"/>
 
 </menu>
