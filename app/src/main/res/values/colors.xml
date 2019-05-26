@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#EC445A</color>
+    <color name="colorPrimary">@color/colorGrey</color>
+    <color name="colorRed">#EC445A</color>
+    <color name="colorLightGrey">#C7C7CC</color>
     <color name="colorGrey">#8E8E93</color>
-    <color name="colorMidGrey">#C7C7CC</color>
+    <color name="colorDarkGrey">#737373</color>
     <color name="colorDescription">#F2ECE7</color>
 </resources>
