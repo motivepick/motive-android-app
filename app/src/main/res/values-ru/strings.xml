@@ -6,7 +6,6 @@
         <item quantity="one">%d задача</item>
         <item quantity="few">%d задачи</item>
         <item quantity="many">%d задач</item>
-        <item quantity="other">%d задач</item>
     </plurals>
     <string name="button_show_closed_tasks">Показать закрытые</string>
     <string name="button_show_open_tasks">Показать открытые</string>
