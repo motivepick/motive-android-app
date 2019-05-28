@@ -1,4 +1,4 @@
-package com.motivemobileapp
+package com.motivemobileapp.description
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -8,10 +8,15 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import com.motivemobileapp.R
+import com.motivemobileapp.TaskRepository
+import com.motivemobileapp.TaskRepositoryFactory
+import com.motivemobileapp.TokenStorage
 import com.motivemobileapp.model.Config
 import com.motivemobileapp.model.Task
 import com.motivemobileapp.model.Token
 import com.motivemobileapp.model.UpdateTaskRequest
+import com.motivemobileapp.task.TaskEditActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 

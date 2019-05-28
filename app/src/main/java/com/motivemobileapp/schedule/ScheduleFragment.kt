@@ -12,12 +12,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.motivemobileapp.R
-import com.motivemobileapp.TaskEditActivity
 import com.motivemobileapp.common.CurrentDateFactoryImpl
 import com.motivemobileapp.model.Schedule
 import com.motivemobileapp.model.State
 import com.motivemobileapp.model.Task
 import com.motivemobileapp.model.TasksViewModel
+import com.motivemobileapp.task.TaskEditActivity
 
 class ScheduleFragment : Fragment() {
 
@@ -62,6 +62,20 @@ class ScheduleFragment : Fragment() {
         val intent = Intent(activity, TaskEditActivity::class.java)
         intent.putExtra("task", task)
         startActivityForResult(intent, TASK_EDIT_ACTICITY_REQUEST_CODE)
+    }
+
+    // TODO: DRY
+    override fun onPause() {
+        super.onPause()
+        val scheduleRecyclerView: RecyclerView = view!!.findViewById(R.id.scheduleRecyclerView)
+        ScheduleUiState.save(scheduleRecyclerView)
+    }
+
+    // TODO: DRY
+    override fun onResume() {
+        super.onResume()
+        val scheduleRecyclerView: RecyclerView = view!!.findViewById(R.id.scheduleRecyclerView)
+        ScheduleUiState.restore(scheduleRecyclerView)
     }
 
     companion object {

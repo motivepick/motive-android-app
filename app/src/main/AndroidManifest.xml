@@ -11,9 +11,9 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".DescriptionEditActivity">
+        <activity android:name=".description.DescriptionEditActivity">
         </activity>
-        <activity android:name=".TaskEditActivity">
+        <activity android:name=".task.TaskEditActivity">
         </activity>
         <activity
             android:name=".EntryActivity"

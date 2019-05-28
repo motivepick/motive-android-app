@@ -17,10 +17,10 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import com.motivemobileapp.Keyboard
 import com.motivemobileapp.R
-import com.motivemobileapp.TaskEditActivity
 import com.motivemobileapp.model.State
 import com.motivemobileapp.model.Task
 import com.motivemobileapp.model.TasksViewModel
+import com.motivemobileapp.task.TaskEditActivity
 
 class TasksFragment : Fragment() {
 
@@ -74,6 +74,18 @@ class TasksFragment : Fragment() {
                 model.deleteTask(id)
             }
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        val tasksRecyclerView: RecyclerView = view!!.findViewById(R.id.tasksRecyclerView)
+        TasksUiState.save(tasksRecyclerView)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val tasksRecyclerView: RecyclerView = view!!.findViewById(R.id.tasksRecyclerView)
+        TasksUiState.restore(tasksRecyclerView)
     }
 
     private fun handleTaskClick(task: Task) {
