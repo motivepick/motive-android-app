@@ -59,6 +59,7 @@ class TaskEditActivity : AppCompatActivity() {
                         .subscribeOn(Schedulers.io())
                         .subscribe({ task ->
                             this.task = Task(this.task!!.id, task.name, this.task!!.description, this.task!!.dueDate, this.task!!.closed)
+                            taskName.text = task!!.name
                         }, { Log.e("Tasks", "Error happened $it") })
                 }
                 val manager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
