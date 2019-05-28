@@ -45,17 +45,22 @@ class TaskEditActivity : AppCompatActivity() {
         val token: Token = TokenStorage(this).getToken()
         val repository: TaskRepository = TaskRepositoryFactory.create(Config(this))
 
-        this.task = intent.extras!!.get("task") as Task
-        val taskName: TextView = findViewById(R.id.taskName)
+        task = intent.extras!!.get("task") as Task
+        val taskName: TextView = findViewById(R.id.name)
         taskName.text = task!!.name
         taskName.setOnEditorActionListener { textView, actionId, event ->
             if (Keyboard.enterPressed(actionId, event)) {
-                repository.updateTask(token, task!!.id, UpdateTaskRequest(textView.text.toString()))
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())
-                    .subscribe({ task ->
-                        this.task = Task(this.task!!.id, task.name, this.task!!.description, this.task!!.dueDate, this.task!!.closed)
-                    }, { Log.e("Tasks", "Error happened $it") })
+                val updatedName = textView.text.toString()
+                if (updatedName.isBlank()) {
+                    taskName.text = task!!.name
+                } else {
+                    repository.updateTask(token, task!!.id, UpdateTaskRequest(updatedName))
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(Schedulers.io())
+                        .subscribe({ task ->
+                            this.task = Task(this.task!!.id, task.name, this.task!!.description, this.task!!.dueDate, this.task!!.closed)
+                        }, { Log.e("Tasks", "Error happened $it") })
+                }
                 val manager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 manager.hideSoftInputFromWindow(view.windowToken, 0)
                 true
@@ -64,7 +69,7 @@ class TaskEditActivity : AppCompatActivity() {
             }
         }
 
-        val dueDate: TextView = findViewById(R.id.editText2)
+        val dueDate: TextView = findViewById(R.id.dueDate)
 
         if (task!!.dueDate != null) {
             calendar.time = task!!.dueDate
@@ -88,18 +93,18 @@ class TaskEditActivity : AppCompatActivity() {
             DatePickerDialog(this, onDateSetListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show()
         }
 
-        val deleteDueDate: Button = findViewById(R.id.button)
+        val deleteDueDate: Button = findViewById(R.id.deleteDueDate)
         deleteDueDate.setOnClickListener {
             repository.updateTask(token, task!!.id, UpdateTaskRequest(true))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe({
-                    this.task = Task(this.task!!.id, this.task!!.name, this.task!!.description, null, this.task!!.closed)
+                    task = Task(this.task!!.id, this.task!!.name, this.task!!.description, null, this.task!!.closed)
                     dueDate.text = ""
                 }, { Log.e("Tasks", "Error happened $it") })
         }
 
-        val descriptionView: TextView = findViewById(R.id.textView)
+        val descriptionView: TextView = findViewById(R.id.description)
         descriptionView.text = task!!.description
         descriptionView.setOnClickListener {
             val intent = Intent(this@TaskEditActivity, DescriptionEditActivity::class.java)
@@ -109,13 +114,13 @@ class TaskEditActivity : AppCompatActivity() {
     }
 
     private fun updateLabel() {
-        val dueDate: TextView = findViewById(R.id.editText2)
+        val dueDate: TextView = findViewById(R.id.dueDate)
         dueDate.text = SimpleDateFormat("dd.MM.yyyy", Locale.US).format(calendar.time)
     }
 
     override fun onSupportNavigateUp(): Boolean {
         val returnIntent = Intent(this@TaskEditActivity, MainActivity::class.java)
-        returnIntent.putExtra("updatedTask", this.task)
+        returnIntent.putExtra("updatedTask", task)
         setResult(RESULT_OK, returnIntent)
         finish()
         return true
@@ -150,9 +155,9 @@ class TaskEditActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == TASK_DESCRIPTION_EDIT_ACTICITY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             val description: String = data!!.getStringExtra("description")
-            this.task = Task(this.task!!.id, this.task!!.name, description, this.task!!.dueDate, this.task!!.closed)
-            val descriptionView: TextView = findViewById(R.id.textView)
-            descriptionView.text = this.task!!.description
+            task = Task(this.task!!.id, this.task!!.name, description, this.task!!.dueDate, this.task!!.closed)
+            val descriptionView: TextView = findViewById(R.id.description)
+            descriptionView.text = task!!.description
         }
     }
 }

@@ -21,16 +21,14 @@ class TasksViewModel(application: Application) : AndroidViewModel(application) {
         val application = getApplication<Application>()
         val token: Token = TokenStorage(application).getToken()
         val repository: TaskRepository = TaskRepositoryFactory.create(Config(application))
-        if (name.isNotBlank()) {
-            val disposable = repository.createTask(token, TaskFromServer(null, name, null, null, false))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe { task: TaskFromServer ->
-                    val current = state.value!!
-                    state.value = State(listOf(Task.from(task)) + current.openTasks, current.closedTasks, current.closed)
-                    onTaskCreated()
-                }
-        }
+        val disposable = repository.createTask(token, TaskFromServer(null, name, null, null, false))
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe { task: TaskFromServer ->
+                val current = state.value!!
+                state.value = State(listOf(Task.from(task)) + current.openTasks, current.closedTasks, current.closed)
+                onTaskCreated()
+            }
     }
 
     fun getState(): LiveData<State> = state

@@ -50,9 +50,14 @@ class TasksFragment : Fragment() {
         val taskNameEditText: EditText = view.findViewById(R.id.taskNameEditText) as EditText
         taskNameEditText.setOnEditorActionListener { textView, actionId, event ->
             if (Keyboard.enterPressed(actionId, event)) {
-                model.createTask(textView.text.toString()) {
+                val name = textView.text.toString()
+                if (name.isBlank()) {
                     textView.text = ""
-                    tasksRecyclerView.scrollToPosition(0)
+                } else {
+                    model.createTask(name) {
+                        textView.text = ""
+                        tasksRecyclerView.scrollToPosition(0)
+                    }
                 }
                 val manager = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 manager.hideSoftInputFromWindow(view.windowToken, 0)

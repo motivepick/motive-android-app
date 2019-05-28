@@ -12,7 +12,5 @@ object ScheduleUiState {
         state = (recyclerView.layoutManager as LinearLayoutManager).onSaveInstanceState()
     }
 
-    fun restore(recyclerView: RecyclerView) {
-        (recyclerView.layoutManager as LinearLayoutManager).onRestoreInstanceState(state)
-    }
+    fun restore(recyclerView: RecyclerView) = (recyclerView.layoutManager as LinearLayoutManager).onRestoreInstanceState(state)
 }
