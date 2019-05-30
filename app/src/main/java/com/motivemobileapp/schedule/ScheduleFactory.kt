@@ -1,6 +1,7 @@
 package com.motivemobileapp.schedule
 
 import com.motivemobileapp.common.CurrentDateFactory
+import com.motivemobileapp.common.StartOfDay
 import com.motivemobileapp.model.Schedule
 import com.motivemobileapp.model.Task
 import java.util.*
@@ -16,7 +17,7 @@ class ScheduleFactory(private val currentDateFactory: CurrentDateFactory) {
             val tasksOfTheDay = tasksWithDueDate.filter { areTheSameDay(dayOfWeek, it.dueDate!!) }
             week[dayOfWeek] = tasksOfTheDay
         }
-        val startOfToday = startOfDay(now)
+        val startOfToday = StartOfDay(now).toDate()
         val overdue = tasksWithDueDate.filter { it.dueDate!!.before(startOfToday) }
 
         val startOfFuture = plusDays(startOfToday, 7)
@@ -56,16 +57,6 @@ class ScheduleFactory(private val currentDateFactory: CurrentDateFactory) {
         val calendar = Calendar.getInstance()
         calendar.time = date
         calendar.add(Calendar.DATE, days)
-        return calendar.time
-    }
-
-    private fun startOfDay(now: Date): Date {
-        val calendar = Calendar.getInstance()
-        calendar.time = now
-        calendar.set(Calendar.HOUR_OF_DAY, 0)
-        calendar.set(Calendar.MINUTE, 0)
-        calendar.set(Calendar.SECOND, 0)
-        calendar.set(Calendar.MILLISECOND, 0)
         return calendar.time
     }
 

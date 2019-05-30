@@ -4,6 +4,7 @@ import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
+import android.util.Log
 import com.motivemobileapp.TaskRepository
 import com.motivemobileapp.TaskRepositoryFactory
 import com.motivemobileapp.TokenStorage
@@ -76,6 +77,9 @@ class TasksViewModel(application: Application) : AndroidViewModel(application) {
             { response ->
                 val tasks = response!!.map { Task.from(it) }
                 state.value = State(tasks.filterNot { it.closed }, tasks.filter { it.closed }, false)
+            },
+            { error ->
+                Log.e(javaClass.name, "Error: ", error)
             }
         ))
     }
