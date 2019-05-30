@@ -7,9 +7,8 @@ import android.arch.lifecycle.MutableLiveData
 import com.motivemobileapp.TaskRepository
 import com.motivemobileapp.TaskRepositoryFactory
 import com.motivemobileapp.TokenStorage
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import com.motivemobileapp.common.Callback.callback
+import retrofit2.Call
 
 class TasksViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -21,14 +20,12 @@ class TasksViewModel(application: Application) : AndroidViewModel(application) {
         val application = getApplication<Application>()
         val token: Token = TokenStorage(application).getToken()
         val repository: TaskRepository = TaskRepositoryFactory.create(Config(application))
-        val disposable = repository.createTask(token, TaskFromServer(null, name, null, null, false))
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe { task: TaskFromServer ->
+        repository.createTask(token, TaskFromServer(null, name, null, null, false))
+            .enqueue(callback({ task ->
                 val current = state.value!!
-                state.value = State(listOf(Task.from(task)) + current.openTasks, current.closedTasks, current.closed)
+                state.value = State(listOf(Task.from(task!!)) + current.openTasks, current.closedTasks, current.closed)
                 onTaskCreated()
-            }
+            }))
     }
 
     fun getState(): LiveData<State> = state
@@ -55,17 +52,15 @@ class TasksViewModel(application: Application) : AndroidViewModel(application) {
         val application = getApplication<Application>()
         val token: Token = TokenStorage(application).getToken()
         val repository: TaskRepository = TaskRepositoryFactory.create(Config(application))
-        val observable: Observable<TaskFromServer> = if (task.closed) repository.undoCloseTask(token, task.id) else repository.closeTask(token, task.id)
-        val disposable = observable.observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe { response ->
-                val current = state.value!!
-                state.value = if (response.closed) {
-                    State(current.openTasks.filterNot { it.id == response.id }, listOf(Task.from(response)) + current.closedTasks, current.closed)
-                } else {
-                    State(listOf(Task.from(response)) + current.openTasks, current.closedTasks.filterNot { it.id == response.id }, current.closed)
-                }
+        val callback: Call<TaskFromServer> = if (task.closed) repository.undoCloseTask(token, task.id) else repository.closeTask(token, task.id)
+        callback.enqueue(callback({ response ->
+            val current = state.value!!
+            state.value = if (response!!.closed) {
+                State(current.openTasks.filterNot { it.id == response.id }, listOf(Task.from(response)) + current.closedTasks, current.closed)
+            } else {
+                State(listOf(Task.from(response)) + current.openTasks, current.closedTasks.filterNot { it.id == response.id }, current.closed)
             }
+        }))
     }
 
     fun toggleClosedTasks() {
@@ -77,12 +72,11 @@ class TasksViewModel(application: Application) : AndroidViewModel(application) {
         val application = getApplication<Application>()
         val token: Token = TokenStorage(application).getToken()
         val repository: TaskRepository = TaskRepositoryFactory.create(Config(application))
-        val observable: Observable<List<TaskFromServer>> = repository.searchTasks(token)
-        val disposable = observable.observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe { response ->
-                val tasks = response.map { Task.from(it) }
+        repository.searchTasks(token).enqueue(callback(
+            { response ->
+                val tasks = response!!.map { Task.from(it) }
                 state.value = State(tasks.filterNot { it.closed }, tasks.filter { it.closed }, false)
             }
+        ))
     }
 }

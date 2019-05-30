@@ -4,7 +4,7 @@ import com.google.gson.GsonBuilder
 import com.motivemobileapp.model.Config
 import com.motivemobileapp.model.TaskFromServer
 import com.motivemobileapp.model.UpdateTaskRequest
-import io.reactivex.Observable
+import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -13,22 +13,22 @@ import retrofit2.http.*
 interface TaskService {
 
     @GET("/tasks")
-    fun search(@Header("Cookie") cookie: String): Observable<List<TaskFromServer>>
+    fun search(@Header("Cookie") cookie: String): Call<List<TaskFromServer>>
 
     @POST("/tasks")
-    fun create(@Header("Cookie") cookie: String, @Body task: TaskFromServer): Observable<TaskFromServer>
+    fun create(@Header("Cookie") cookie: String, @Body task: TaskFromServer): Call<TaskFromServer>
 
     @PUT("/tasks/{id}")
-    fun update(@Header("Cookie") cookie: String, @Path("id") id: Long, @Body request: UpdateTaskRequest): Observable<TaskFromServer>
+    fun update(@Header("Cookie") cookie: String, @Path("id") id: Long, @Body request: UpdateTaskRequest): Call<TaskFromServer>
 
     @DELETE("/tasks/{id}")
-    fun delete(@Header("Cookie") cookie: String, @Path("id") id: Long): Observable<Unit>
+    fun delete(@Header("Cookie") cookie: String, @Path("id") id: Long): Call<Unit>
 
     @PUT("/tasks/{id}/closing")
-    fun close(@Header("Cookie") cookie: String, @Path("id") id: Long): Observable<TaskFromServer>
+    fun close(@Header("Cookie") cookie: String, @Path("id") id: Long): Call<TaskFromServer>
 
     @PUT("/tasks/{id}/undo-closing")
-    fun undoClose(@Header("Cookie") cookie: String, @Path("id") id: Long): Observable<TaskFromServer>
+    fun undoClose(@Header("Cookie") cookie: String, @Path("id") id: Long): Call<TaskFromServer>
 
     companion object Factory {
         fun create(config: Config): TaskService {

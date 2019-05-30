@@ -1,6 +1,5 @@
 package com.motivemobileapp.tasks
 
-import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
@@ -39,7 +38,6 @@ class TasksFragment : Fragment() {
         })
     }
 
-    @SuppressLint("CheckResult")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_tasks, container, false)
 

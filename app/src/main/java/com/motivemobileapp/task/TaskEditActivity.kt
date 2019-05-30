@@ -1,6 +1,5 @@
 package com.motivemobileapp.task
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.DatePickerDialog.OnDateSetListener
@@ -8,7 +7,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -16,13 +14,12 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.TextView
 import com.motivemobileapp.*
+import com.motivemobileapp.common.Callback.callback
 import com.motivemobileapp.description.DescriptionEditActivity
 import com.motivemobileapp.model.Config
 import com.motivemobileapp.model.Task
 import com.motivemobileapp.model.Token
 import com.motivemobileapp.model.UpdateTaskRequest
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -34,7 +31,6 @@ class TaskEditActivity : AppCompatActivity() {
 
     private var task: Task? = null
 
-    @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
@@ -55,12 +51,10 @@ class TaskEditActivity : AppCompatActivity() {
                     taskName.text = task!!.name
                 } else {
                     repository.updateTask(token, task!!.id, UpdateTaskRequest(updatedName))
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeOn(Schedulers.io())
-                        .subscribe({ task ->
-                            this.task = Task(this.task!!.id, task.name, this.task!!.description, this.task!!.dueDate, this.task!!.closed)
-                            taskName.text = task!!.name
-                        }, { Log.e("Tasks", "Error happened $it") })
+                        .enqueue(callback({ task ->
+                            this.task = Task(this.task!!.id, task!!.name, this.task!!.description, this.task!!.dueDate, this.task!!.closed)
+                            taskName.text = task.name
+                        }))
                 }
                 val manager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 manager.hideSoftInputFromWindow(view.windowToken, 0)
@@ -83,11 +77,9 @@ class TaskEditActivity : AppCompatActivity() {
             calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
             updateLabel()
             repository.updateTask(token, task!!.id, UpdateTaskRequest(calendar.time))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe({
-                    this.task = Task(this.task!!.id, this.task!!.name, this.task!!.description, it.dueDate, this.task!!.closed)
-                }, { Log.e("Tasks", "Error happened $it") })
+                .enqueue(callback({
+                    this.task = Task(this.task!!.id, this.task!!.name, this.task!!.description, it!!.dueDate, this.task!!.closed)
+                }))
         }
 
         dueDate.setOnClickListener {
@@ -97,12 +89,10 @@ class TaskEditActivity : AppCompatActivity() {
         val deleteDueDate: Button = findViewById(R.id.deleteDueDate)
         deleteDueDate.setOnClickListener {
             repository.updateTask(token, task!!.id, UpdateTaskRequest(true))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe({
+                .enqueue(callback({
                     task = Task(this.task!!.id, this.task!!.name, this.task!!.description, null, this.task!!.closed)
                     dueDate.text = ""
-                }, { Log.e("Tasks", "Error happened $it") })
+                }))
         }
 
         val descriptionView: TextView = findViewById(R.id.description)
@@ -132,21 +122,18 @@ class TaskEditActivity : AppCompatActivity() {
         return true
     }
 
-    @SuppressLint("CheckResult")
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
         if (item.itemId == R.id.deleteTaskMenuItem) {
             val task: Task = intent.extras!!.get("task") as Task
             val token: Token = TokenStorage(this).getToken()
             val repository: TaskRepository = TaskRepositoryFactory.create(Config(this))
             repository.deleteTask(token, task.id)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe({
+                .enqueue(callback({
                     val returnIntent = Intent(this@TaskEditActivity, MainActivity::class.java)
                     returnIntent.putExtra("deletedTaskId", task.id)
                     setResult(RESULT_OK, returnIntent)
                     finish()
-                }, { error -> Log.e("Tasks", "Error happened $error") })
+                }))
             true
         } else {
             super.onOptionsItemSelected(item)
