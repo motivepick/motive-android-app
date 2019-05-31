@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
         supportActionBar!!.hide()
         setContentView(R.layout.activity_main)
         navigation.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
-        supportFragmentManager.beginTransaction().add(R.id.container, TasksFragment.newInstance()).commit()
+        supportFragmentManager.beginTransaction().replace(R.id.container, TasksFragment.newInstance()).commit()
     }
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
