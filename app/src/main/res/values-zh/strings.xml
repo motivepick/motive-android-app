@@ -2,7 +2,10 @@
 <resources>
     <string name="app_name">Motive</string>
     <string name="title_tasks">待辦事項</string>
-    <plurals name="subtitle_tasks_section">
+    <plurals name="subtitle_open_tasks_section">
+        <item quantity="other">%d 個待辦事項</item>
+    </plurals>
+    <plurals name="subtitle_closed_tasks_section">
         <item quantity="other">%d 個待辦事項</item>
     </plurals>
     <string name="button_show_closed_tasks">顯示已完成事項</string>

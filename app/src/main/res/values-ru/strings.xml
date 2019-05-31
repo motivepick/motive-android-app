@@ -2,10 +2,15 @@
 <resources>
     <string name="app_name">Motive</string>
     <string name="title_tasks">Задачи</string>
-    <plurals name="subtitle_tasks_section">
-        <item quantity="one">%d задача</item>
-        <item quantity="few">%d задачи</item>
-        <item quantity="many">%d задач</item>
+    <plurals name="subtitle_open_tasks_section">
+        <item quantity="one">%d открытая задача</item>
+        <item quantity="few">%d открытых задачи</item>
+        <item quantity="many">%d открытых задач</item>
+    </plurals>
+    <plurals name="subtitle_closed_tasks_section">
+        <item quantity="one">%d закрытая задача</item>
+        <item quantity="few">%d закрытых задачи</item>
+        <item quantity="many">%d закрытых задач</item>
     </plurals>
     <string name="button_show_closed_tasks">Показать закрытые</string>
     <string name="button_show_open_tasks">Показать открытые</string>

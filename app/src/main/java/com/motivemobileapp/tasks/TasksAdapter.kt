@@ -43,7 +43,8 @@ class TasksAdapter(
         if (getItemViewType(position) == SECTION_VIEW) {
             val size = tasks.size
             val holder = viewHolder as SectionHeaderViewHolder
-            holder.numberOfTasksTextView.text = context.resources.getQuantityString(R.plurals.subtitle_tasks_section, size, size)
+            holder.numberOfTasksTextView.text =
+                context.resources.getQuantityString(if (closed) R.plurals.subtitle_closed_tasks_section else R.plurals.subtitle_open_tasks_section, size, size)
             holder.showClosedTasksButton.text = context.getString(if (closed) R.string.button_show_open_tasks else R.string.button_show_closed_tasks)
             holder.showClosedTasksButton.setOnClickListener {
                 onShowClosedTasksClick()
