@@ -10,15 +10,13 @@ class EntryActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val launchIntent = Intent()
         val launchActivity = try {
             Class.forName(getScreenClassName())
         } catch (e: ClassNotFoundException) {
             LoginActivity::class.java
         }
 
-        launchIntent.setClass(applicationContext, launchActivity)
-        startActivity(launchIntent)
+        startActivity(Intent().setClass(applicationContext, launchActivity))
         overridePendingTransition(NO_ANIMATION, NO_ANIMATION)
 
         finish()

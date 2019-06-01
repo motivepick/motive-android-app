@@ -2,13 +2,9 @@
 <resources>
     <string name="app_name">Motive</string>
     <string name="title_tasks">Tasks</string>
-    <plurals name="subtitle_open_tasks_section">
-        <item quantity="one">%d open task</item>
-        <item quantity="other">%d open tasks</item>
-    </plurals>
-    <plurals name="subtitle_closed_tasks_section">
-        <item quantity="one">%d closed task</item>
-        <item quantity="other">%d closed tasks</item>
+    <plurals name="subtitle_tasks_section">
+        <item quantity="one">%d task</item>
+        <item quantity="other">%d tasks</item>
     </plurals>
     <string name="button_show_closed_tasks">Show Closed Tasks</string>
     <string name="button_show_open_tasks">Show Open Tasks</string>
