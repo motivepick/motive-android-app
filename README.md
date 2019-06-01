@@ -7,7 +7,7 @@
 3. Modify `network_security_config.xml` and `application.properties` files to use your local IP address and `8080` port.
 4. Run your application on a simulator by e.g. Android Studio.
 
-## To Make A Release
+## To Release
 
 1. Make sure the back end URLs are updated to `https://api.motivepick.com` in `network_security_config.xml` and `application.properties`.
 2. Increase the values of `versionCode` and `versionName` in `./app/build.gradle`.
