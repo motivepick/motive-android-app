@@ -1,20 +1,15 @@
 package com.motivemobileapp.schedule
 
 import android.content.Context
-import android.graphics.Paint.STRIKE_THRU_TEXT_FLAG
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.ViewHolder
-import android.view.Gravity.CENTER_VERTICAL
-import android.view.Gravity.START
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.TextView
 import com.motivemobileapp.R
 import com.motivemobileapp.TaskViewHolder
-import com.motivemobileapp.common.DateFormat
+import com.motivemobileapp.common.TaskViewHolderRenderer
 import com.motivemobileapp.model.Schedule
 import com.motivemobileapp.model.ScheduleSection
 import com.motivemobileapp.model.Task
@@ -27,7 +22,7 @@ class ScheduleAdapter(private val context: Context, schedule: Schedule, private 
     RecyclerView.Adapter<ViewHolder>() {
 
     private val SECTION_VIEW = 0
-    private val CONTENT_VIEW = 1
+    private val TASK_VIEW = 1
 
     private var tasks: List<Serializable>
     private val week: Map<Int, String> = mapOf(
@@ -81,7 +76,7 @@ class ScheduleAdapter(private val context: Context, schedule: Schedule, private 
         }
     }
 
-    override fun getItemViewType(position: Int): Int = if (tasks[position] is Task) CONTENT_VIEW else SECTION_VIEW
+    override fun getItemViewType(position: Int): Int = if (tasks[position] is Task) TASK_VIEW else SECTION_VIEW
 
     override fun getItemCount(): Int {
         return tasks.size
@@ -93,26 +88,7 @@ class ScheduleAdapter(private val context: Context, schedule: Schedule, private 
             val sectionItem = tasks[position] as ScheduleSection
             holder.headerTitleTextView.text = sectionItem.title
         } else {
-            val holder = viewHolder as TaskViewHolder
-            val task = tasks[position] as Task
-            holder.checkBox.setImageResource(if (task.closed) R.drawable.check_circle_checked_24dp else R.drawable.check_circle_unchecked_24dp)
-            holder.checkBox.setOnClickListener {
-                task.closed = !task.closed
-                holder.checkBox.setImageResource(if (task.closed) R.drawable.check_circle_checked_24dp else R.drawable.check_circle_unchecked_24dp)
-                holder.textView.paintFlags = holder.textView.paintFlags or STRIKE_THRU_TEXT_FLAG
-                onTaskClose(task)
-            }
-            holder.textView.text = task.name
-            holder.textView.paintFlags = if (task.closed) holder.textView.paintFlags or STRIKE_THRU_TEXT_FLAG else holder.textView.paintFlags and STRIKE_THRU_TEXT_FLAG.inv()
-            holder.clickable.setOnClickListener { onTaskClick(task) }
-            if (task.dueDate == null) {
-                holder.textView.gravity = START or CENTER_VERTICAL
-                holder.dueDateView.visibility = GONE
-            } else {
-                holder.dueDateView.visibility = VISIBLE
-                holder.dueDateView.text = DateFormat.format(task.dueDate)
-                holder.dueDateView.setTextColor(task.getDueDateColor())
-            }
+            TaskViewHolderRenderer.render(viewHolder as TaskViewHolder, tasks[position] as Task, onTaskClose, onTaskClick)
         }
     }
 
