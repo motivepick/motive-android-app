@@ -1,7 +1,7 @@
 package com.motivemobileapp
 
 import android.os.Bundle
-import android.support.design.widget.BottomNavigationView
+import android.support.design.widget.BottomNavigationView.OnNavigationItemSelectedListener
 import android.support.v7.app.AppCompatActivity
 import com.motivemobileapp.account.AccountFragment
 import com.motivemobileapp.schedule.ScheduleFragment
@@ -14,11 +14,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         supportActionBar!!.hide()
         setContentView(R.layout.activity_main)
-        navigation.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
+        navigation.setOnNavigationItemSelectedListener(handleNavigationItemSelected)
         supportFragmentManager.beginTransaction().replace(R.id.container, TasksFragment.newInstance()).commit()
     }
 
-    private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+    private val handleNavigationItemSelected = OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             R.id.navigation_tasks -> {
                 supportFragmentManager.beginTransaction().replace(R.id.container, TasksFragment.newInstance()).commit()

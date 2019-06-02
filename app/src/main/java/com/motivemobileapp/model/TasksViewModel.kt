@@ -9,7 +9,6 @@ import com.motivemobileapp.TaskRepository
 import com.motivemobileapp.TaskRepositoryFactory
 import com.motivemobileapp.TokenStorage
 import com.motivemobileapp.common.Callback.callback
-import retrofit2.Call
 
 class TasksViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -44,10 +43,10 @@ class TasksViewModel(application: Application) : AndroidViewModel(application) {
 
     fun closeTask(task: Task) {
         val application = getApplication<Application>()
-        val token: Token = TokenStorage(application).getToken()
-        val repository: TaskRepository = TaskRepositoryFactory.create(Config(application))
-        val callback: Call<TaskFromServer> = if (task.closed) repository.undoCloseTask(token, task.id) else repository.closeTask(token, task.id)
-        callback.enqueue(callback({ response ->
+        val token = TokenStorage(application).getToken()
+        val repository = TaskRepositoryFactory.create(Config(application))
+        val call = if (task.closed) repository.closeTask(token, task.id) else repository.undoCloseTask(token, task.id)
+        call.enqueue(callback({ response ->
             val current = state.value!!
             state.value = if (response!!.closed) {
                 State(current.openTasks.filterNot { it.id == response.id }, listOf(Task.from(response)) + current.closedTasks, current.closed)

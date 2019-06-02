@@ -5,7 +5,7 @@ import com.motivemobileapp.common.StartOfDay
 import java.io.Serializable
 import java.util.*
 
-data class Task(val id: Long, val name: String, val description: String, val dueDate: Date?, val closed: Boolean) : Serializable {
+data class Task(val id: Long, val name: String, val description: String, val dueDate: Date?, var closed: Boolean) : Serializable {
 
     companion object {
         fun from(task: TaskFromServer): Task =

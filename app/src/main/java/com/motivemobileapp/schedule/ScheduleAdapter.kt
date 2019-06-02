@@ -96,6 +96,7 @@ class ScheduleAdapter(private val context: Context, schedule: Schedule, private 
             val holder = viewHolder as TaskViewHolder
             val task = tasks[position] as Task
             holder.checkBox.setOnClickListener {
+                task.closed = !task.closed
                 holder.textView.paintFlags = holder.textView.paintFlags or STRIKE_THRU_TEXT_FLAG
                 onTaskClose(task)
             }

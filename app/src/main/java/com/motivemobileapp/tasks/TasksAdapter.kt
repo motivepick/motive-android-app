@@ -52,7 +52,8 @@ class TasksAdapter(
             val holder = viewHolder as TaskViewHolder
             val task = tasks[position - 1]
             holder.checkBox.setOnClickListener {
-                holder.textView.paintFlags = if (task.closed) holder.textView.paintFlags and STRIKE_THRU_TEXT_FLAG.inv() else holder.textView.paintFlags or STRIKE_THRU_TEXT_FLAG
+                task.closed = !task.closed
+                holder.textView.paintFlags = if (task.closed) holder.textView.paintFlags or STRIKE_THRU_TEXT_FLAG else holder.textView.paintFlags and STRIKE_THRU_TEXT_FLAG.inv()
                 onTaskClose(task)
             }
             holder.textView.text = task.name
