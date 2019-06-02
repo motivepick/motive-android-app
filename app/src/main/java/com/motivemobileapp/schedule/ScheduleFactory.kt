@@ -14,7 +14,7 @@ class ScheduleFactory(private val currentDateFactory: CurrentDateFactory) {
         val tasksWithDueDate = tasks.filter { it.dueDate != null }
         val week: MutableMap<Date, List<Task>> = weekWithoutTasks(now)
         for (dayOfWeek in week.keys) {
-            val tasksOfTheDay = tasksWithDueDate.filter { areTheSameDay(dayOfWeek, it.dueDate!!) }
+            val tasksOfTheDay = tasksWithDueDate.filter { sameDay(dayOfWeek, it.dueDate!!) }
             week[dayOfWeek] = tasksOfTheDay
         }
         val startOfToday = StartOfDay(now).toDate()
@@ -27,15 +27,11 @@ class ScheduleFactory(private val currentDateFactory: CurrentDateFactory) {
             .sortedBy { it.dueDate }
             .firstOrNull()
 
-        return if (firstFutureTaskOrNull == null) {
-            Schedule(week, overdue, emptyList())
-        } else {
-            val futureTasks = tasksWithDueDate.filter { areTheSameDay(firstFutureTaskOrNull.dueDate!!, it.dueDate!!) }
-            Schedule(week, overdue, futureTasks)
-        }
+        val futureTasks = if (firstFutureTaskOrNull == null) emptyList() else tasksWithDueDate.filter { sameDay(firstFutureTaskOrNull.dueDate!!, it.dueDate!!) }
+        return Schedule(week, overdue, futureTasks)
     }
 
-    private fun areTheSameDay(first: Date, second: Date): Boolean {
+    private fun sameDay(first: Date, second: Date): Boolean {
         val firstCalendar = Calendar.getInstance()
         firstCalendar.time = first
         val secondCalendar = Calendar.getInstance()

@@ -14,11 +14,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.motivemobileapp.R
 import com.motivemobileapp.TaskViewHolder
+import com.motivemobileapp.common.DateFormat
 import com.motivemobileapp.model.Schedule
 import com.motivemobileapp.model.ScheduleSection
 import com.motivemobileapp.model.Task
 import java.io.Serializable
-import java.text.SimpleDateFormat
 import java.util.*
 import java.util.Calendar.*
 import kotlin.collections.ArrayList
@@ -108,7 +108,7 @@ class ScheduleAdapter(private val context: Context, schedule: Schedule, private 
                 holder.dueDateView.visibility = GONE
             } else {
                 holder.dueDateView.visibility = VISIBLE
-                holder.dueDateView.text = SimpleDateFormat("dd.MM.yyyy", Locale.US).format(task.dueDate)
+                holder.dueDateView.text = DateFormat.format(task.dueDate)
                 holder.dueDateView.setTextColor(task.getDueDateColor())
             }
         }

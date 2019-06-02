@@ -15,9 +15,8 @@ import android.widget.Button
 import android.widget.TextView
 import com.motivemobileapp.R
 import com.motivemobileapp.TaskViewHolder
+import com.motivemobileapp.common.DateFormat
 import com.motivemobileapp.model.Task
-import java.text.SimpleDateFormat
-import java.util.*
 
 class TasksAdapter(
     private val context: Context,
@@ -65,7 +64,7 @@ class TasksAdapter(
                 holder.dueDateView.visibility = GONE
             } else {
                 holder.dueDateView.visibility = VISIBLE
-                holder.dueDateView.text = SimpleDateFormat("dd.MM.yyyy", Locale.US).format(task.dueDate)
+                holder.dueDateView.text = DateFormat.format(task.dueDate)
                 holder.dueDateView.setTextColor(task.getDueDateColor())
             }
         }

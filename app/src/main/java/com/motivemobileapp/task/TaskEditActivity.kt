@@ -15,12 +15,12 @@ import android.widget.Button
 import android.widget.TextView
 import com.motivemobileapp.*
 import com.motivemobileapp.common.Callback.callback
+import com.motivemobileapp.common.DateFormat
 import com.motivemobileapp.description.DescriptionEditActivity
 import com.motivemobileapp.model.Config
 import com.motivemobileapp.model.Task
 import com.motivemobileapp.model.Token
 import com.motivemobileapp.model.UpdateTaskRequest
-import java.text.SimpleDateFormat
 import java.util.*
 
 class TaskEditActivity : AppCompatActivity() {
@@ -106,7 +106,7 @@ class TaskEditActivity : AppCompatActivity() {
 
     private fun updateLabel() {
         val dueDate: TextView = findViewById(R.id.dueDate)
-        dueDate.text = SimpleDateFormat("dd.MM.yyyy", Locale.US).format(calendar.time)
+        dueDate.text = DateFormat.format(calendar.time)
     }
 
     override fun onSupportNavigateUp(): Boolean {
