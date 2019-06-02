@@ -12,7 +12,7 @@ class ScheduleFactory(private val currentDateFactory: CurrentDateFactory) {
     fun scheduleFor(tasks: List<Task>): Schedule {
         val now = currentDateFactory.now()
         val tasksWithDueDate = tasks.filter { it.dueDate != null }
-        val week: MutableMap<Date, List<Task>> = week(now)
+        val week: MutableMap<Date, List<Task>> = weekWithoutTasks(now)
         for (dayOfWeek in week.keys) {
             val tasksOfTheDay = tasksWithDueDate.filter { areTheSameDay(dayOfWeek, it.dueDate!!) }
             week[dayOfWeek] = tasksOfTheDay
@@ -44,13 +44,13 @@ class ScheduleFactory(private val currentDateFactory: CurrentDateFactory) {
                 && firstCalendar.get(Calendar.YEAR) == secondCalendar.get(Calendar.YEAR)
     }
 
-    private fun week(now: Date): MutableMap<Date, List<Task>> {
-        val schedule: MutableMap<Date, List<Task>> = LinkedHashMap()
+    private fun weekWithoutTasks(now: Date): MutableMap<Date, List<Task>> {
+        val week: MutableMap<Date, List<Task>> = LinkedHashMap()
         val endOfToday = endOfDay(now)
         for (i in 0..6) {
-            schedule[plusDays(endOfToday, i)] = ArrayList()
+            week[plusDays(endOfToday, i)] = ArrayList()
         }
-        return schedule
+        return week
     }
 
     private fun plusDays(date: Date, days: Int): Date {

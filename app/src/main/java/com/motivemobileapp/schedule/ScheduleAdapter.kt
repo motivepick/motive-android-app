@@ -1,12 +1,15 @@
 package com.motivemobileapp.schedule
 
 import android.content.Context
-import android.graphics.Paint
+import android.graphics.Paint.STRIKE_THRU_TEXT_FLAG
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.ViewHolder
-import android.view.Gravity
+import android.view.Gravity.CENTER_VERTICAL
+import android.view.Gravity.START
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.TextView
 import com.motivemobileapp.R
@@ -45,9 +48,9 @@ class ScheduleAdapter(private val context: Context, schedule: Schedule, private 
         val result = ArrayList<Serializable>()
         for (day in schedule.week.keys) {
             val dayOfWeek = asDayOfWeek(day)
-            val tasks = schedule.week[day]!!
+            val tasks = schedule.week.getValue(day)
             if (tasks.isNotEmpty()) {
-                result.add(ScheduleSection(week[dayOfWeek]!!))
+                result.add(ScheduleSection(week.getValue(dayOfWeek)))
                 tasks.forEach { result.add(it) }
             }
         }
@@ -93,17 +96,17 @@ class ScheduleAdapter(private val context: Context, schedule: Schedule, private 
             val holder = viewHolder as TaskViewHolder
             val task = tasks[position] as Task
             holder.checkBox.setOnClickListener {
-                holder.textView.paintFlags = holder.textView.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                holder.textView.paintFlags = holder.textView.paintFlags or STRIKE_THRU_TEXT_FLAG
                 onTaskClose(task)
             }
             holder.textView.text = task.name
-            holder.textView.paintFlags = if (task.closed) holder.textView.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG else holder.textView.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+            holder.textView.paintFlags = if (task.closed) holder.textView.paintFlags or STRIKE_THRU_TEXT_FLAG else holder.textView.paintFlags and STRIKE_THRU_TEXT_FLAG.inv()
             holder.clickable.setOnClickListener { onTaskClick(task) }
             if (task.dueDate == null) {
-                holder.textView.gravity = Gravity.START or Gravity.CENTER_VERTICAL
-                holder.dueDateView.visibility = View.GONE
+                holder.textView.gravity = START or CENTER_VERTICAL
+                holder.dueDateView.visibility = GONE
             } else {
-                holder.dueDateView.visibility = View.VISIBLE
+                holder.dueDateView.visibility = VISIBLE
                 holder.dueDateView.text = SimpleDateFormat("dd.MM.yyyy", Locale.US).format(task.dueDate)
                 holder.dueDateView.setTextColor(task.getDueDateColor())
             }

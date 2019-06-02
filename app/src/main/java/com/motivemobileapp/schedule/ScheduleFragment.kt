@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.motivemobileapp.R
+import com.motivemobileapp.UiState
 import com.motivemobileapp.common.CurrentDateFactoryImpl
 import com.motivemobileapp.model.Schedule
 import com.motivemobileapp.model.State
@@ -64,18 +65,14 @@ class ScheduleFragment : Fragment() {
         startActivityForResult(intent, TASK_EDIT_ACTICITY_REQUEST_CODE)
     }
 
-    // TODO: DRY
     override fun onPause() {
         super.onPause()
-        val scheduleRecyclerView: RecyclerView = view!!.findViewById(R.id.scheduleRecyclerView)
-        ScheduleUiState.save(scheduleRecyclerView)
+        UiState.save("schedule", view!!.findViewById(R.id.scheduleRecyclerView))
     }
 
-    // TODO: DRY
     override fun onResume() {
         super.onResume()
-        val scheduleRecyclerView: RecyclerView = view!!.findViewById(R.id.scheduleRecyclerView)
-        ScheduleUiState.restore(scheduleRecyclerView)
+        UiState.restore("schedule", view!!.findViewById(R.id.scheduleRecyclerView))
     }
 
     companion object {

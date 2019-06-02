@@ -1,6 +1,7 @@
 package com.motivemobileapp
 
 import android.content.Intent
+import android.content.Intent.ACTION_VIEW
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.Button
@@ -17,12 +18,12 @@ class LoginActivity : AppCompatActivity() {
 
         val loginVkButton: Button = findViewById(R.id.loginVkButton)
         loginVkButton.setOnClickListener {
-            startActivity(Intent(Intent.ACTION_VIEW, config.getVkOauth2Url()))
+            startActivity(Intent(ACTION_VIEW, config.getVkOauth2Url()))
         }
 
         val loginFacebookButton: Button = findViewById(R.id.loginFacebookButton)
         loginFacebookButton.setOnClickListener {
-            startActivity(Intent(Intent.ACTION_VIEW, config.getFacebookOauth2Url()))
+            startActivity(Intent(ACTION_VIEW, config.getFacebookOauth2Url()))
         }
 
         handleIntent(intent)
@@ -34,7 +35,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun handleIntent(intent: Intent) {
-        if (intent.action == Intent.ACTION_VIEW) {
+        if (intent.action == ACTION_VIEW) {
             TokenStorage(this).storeToken(Token(intent.data))
             startActivity(Intent(this@LoginActivity, MainActivity::class.java))
             finish()

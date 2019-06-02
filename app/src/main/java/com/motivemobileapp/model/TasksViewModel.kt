@@ -37,13 +37,6 @@ class TasksViewModel(application: Application) : AndroidViewModel(application) {
         state.value = State(update(current.openTasks, updated), update(current.closedTasks, updated), current.closed)
     }
 
-    private fun update(tasks: List<Task>, updated: Task): List<Task> {
-        val left: List<Task> = tasks.takeWhile { it.id != updated.id }
-        val right: List<Task> = tasks.takeLastWhile { it.id != updated.id }
-        val found = left.size + right.size < tasks.size
-        return if (found) left + listOf(Task(updated.id, updated.name, updated.description, updated.dueDate, updated.closed)) + right else tasks
-    }
-
     fun deleteTask(id: Long) {
         val current = state.value!!
         state.value = State(current.openTasks.filterNot { it.id == id }, current.closedTasks.filterNot { it.id == id }, current.closed)
@@ -67,6 +60,13 @@ class TasksViewModel(application: Application) : AndroidViewModel(application) {
     fun toggleClosedTasks() {
         val current = state.value!!
         state.value = State(current.openTasks, current.closedTasks, !current.closed)
+    }
+
+    private fun update(tasks: List<Task>, updated: Task): List<Task> {
+        val left: List<Task> = tasks.takeWhile { it.id != updated.id }
+        val right: List<Task> = tasks.takeLastWhile { it.id != updated.id }
+        val found = left.size + right.size < tasks.size
+        return if (found) left + listOf(Task(updated.id, updated.name, updated.description, updated.dueDate, updated.closed)) + right else tasks
     }
 
     private fun loadTasks() {

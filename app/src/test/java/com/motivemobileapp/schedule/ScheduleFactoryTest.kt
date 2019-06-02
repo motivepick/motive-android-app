@@ -20,7 +20,7 @@ class ScheduleFactoryTest {
         val schedule = ScheduleFactory(clock).scheduleFor(tasks)
         assertEquals(1, schedule.overdue.size)
         assertEquals(2, schedule.future.size)
-        assertEquals(1, schedule.week[endOfDay(tomorrow)]!!.size)
+        assertEquals(1, schedule.week.getValue(endOfDay(tomorrow)).size)
     }
 
     private fun task(dueDate: Date): Task {
