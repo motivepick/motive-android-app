@@ -95,8 +95,10 @@ class ScheduleAdapter(private val context: Context, schedule: Schedule, private 
         } else {
             val holder = viewHolder as TaskViewHolder
             val task = tasks[position] as Task
+            holder.checkBox.setImageResource(if (task.closed) R.drawable.check_circle_checked_24dp else R.drawable.check_circle_unchecked_24dp)
             holder.checkBox.setOnClickListener {
                 task.closed = !task.closed
+                holder.checkBox.setImageResource(if (task.closed) R.drawable.check_circle_checked_24dp else R.drawable.check_circle_unchecked_24dp)
                 holder.textView.paintFlags = holder.textView.paintFlags or STRIKE_THRU_TEXT_FLAG
                 onTaskClose(task)
             }

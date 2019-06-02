@@ -50,8 +50,11 @@ class TasksAdapter(
         } else {
             val holder = viewHolder as TaskViewHolder
             val task = tasks[position - 1]
+            holder.checkBox.setImageResource(if (task.closed) R.drawable.check_circle_checked_24dp else R.drawable.check_circle_unchecked_24dp)
+            holder.checkBox.setColorFilter(task.getNameColor())
             holder.checkBox.setOnClickListener {
                 task.closed = !task.closed
+                holder.checkBox.setImageResource(if (task.closed) R.drawable.check_circle_checked_24dp else R.drawable.check_circle_unchecked_24dp)
                 holder.textView.paintFlags = if (task.closed) holder.textView.paintFlags or STRIKE_THRU_TEXT_FLAG else holder.textView.paintFlags and STRIKE_THRU_TEXT_FLAG.inv()
                 onTaskClose(task)
             }
