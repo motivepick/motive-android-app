@@ -79,6 +79,7 @@ class TasksViewModel(application: Application) : AndroidViewModel(application) {
             },
             { error ->
                 Log.e(javaClass.name, "Error: ", error)
+                state.value = State(emptyList(), emptyList(), false)
             }
         ))
     }
