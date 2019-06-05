@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Motive</string>
+    <string name="app_slogan">Победи лень</string>
     <string name="title_tasks">Задачи</string>
     <plurals name="subtitle_tasks_section">
         <item quantity="one">%d задача</item>
@@ -31,4 +32,5 @@
     <string name="title_future">Дальше</string>
     <string name="title_overdue">Просроченные</string>
     <string name="button_logout">Выйти</string>
+    <string name="image_logo">Логотип Мотива</string>
 </resources>

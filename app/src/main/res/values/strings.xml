@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Motive</string>
+    <string name="app_slogan">Defeat your laziness</string>
     <string name="title_tasks">Tasks</string>
     <plurals name="subtitle_tasks_section">
         <item quantity="one">%d task</item>
@@ -30,4 +31,5 @@
     <string name="title_future">Next</string>
     <string name="title_overdue">Overdue</string>
     <string name="button_logout">Logout</string>
+    <string name="image_logo">Motive logo</string>
 </resources>
