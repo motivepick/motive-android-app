@@ -3,7 +3,6 @@ package com.motivemobileapp
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView.OnNavigationItemSelectedListener
 import android.support.v7.app.AppCompatActivity
-import com.motivemobileapp.account.AccountFragment
 import com.motivemobileapp.schedule.ScheduleFragment
 import com.motivemobileapp.tasks.TasksFragment
 import kotlinx.android.synthetic.main.activity_main.*
@@ -26,10 +25,6 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.navigation_schedule -> {
                 supportFragmentManager.beginTransaction().replace(R.id.container, ScheduleFragment.newInstance()).commit()
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.navigation_account -> {
-                supportFragmentManager.beginTransaction().replace(R.id.container, AccountFragment.newInstance()).commit()
                 return@OnNavigationItemSelectedListener true
             }
         }

@@ -10,7 +10,6 @@
     <string name="button_show_open_tasks">顯示進行中事項</string>
     <string name="title_schedule">行程表</string>
     <string name="title_schedule_section">行程表</string>
-    <string name="title_account">帳戶</string>
     <string name="title_edit_task">編輯</string>
     <string name="title_edit_description">編輯</string>
     <string name="menu_delete_task">刪除任務</string>

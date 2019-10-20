@@ -12,7 +12,6 @@
     <string name="button_show_open_tasks">Показать открытые</string>
     <string name="title_schedule">График</string>
     <string name="title_schedule_section">График</string>
-    <string name="title_account">Аккаунт</string>
     <string name="title_edit_task">Редактировать задачу</string>
     <string name="title_edit_description">Редактировать заметки</string>
     <string name="menu_delete_task">Удалить задачу</string>
