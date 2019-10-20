@@ -10,7 +10,7 @@
 ## To Release
 
 1. Increase the values of `versionCode` and `versionName` in `./app/build.gradle`.
-2. Make sure the back end URLs are updated to `https://api.motivepick.com` in `network_security_config.xml` and `application.properties`.
+2. Make sure the back end URLs are updated to `api.motivepick.com` in `network_security_config.xml` and to `https://api.motivepick.com` in `application.properties`.
 3. Specify values for `MOTIVE_RELEASE_STORE_PASSWORD` and `MOTIVE_RELEASE_KEY_PASSWORD` in `./gradle.properties`. If you do not have the signature file, you can use e.g. Android Studio to generate it.
 4. Run `./gradlew clean assembleRelease`
 5. The _signed_ assembly should appear in `./app/build/outputs/apk/release`

@@ -8,7 +8,7 @@ class Token(private val value: String) {
 
     fun isBlank(): Boolean = value.isBlank()
 
-    fun toCookie(): String = "SESSION=$value"
+    fun toCookie(): String = "MOTIVE_SESSION=$value"
 
     override fun toString(): String = value
 }
