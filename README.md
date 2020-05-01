@@ -7,6 +7,8 @@
 3. Modify `network_security_config.xml` and `application.properties` files to use your local IP address and `8080` port.
 4. Run your application on a simulator by e.g. Android Studio.
 
+Note: if during login via VK "redirect_uri has wrong domain, check application settings" error happens, this means that you have to update the IP address from the 2nd paragraph above in the configuration of your VK app.
+
 ## To Release
 
 1. Increase the values of `versionCode` and `versionName` in `./app/build.gradle`.
