@@ -7,10 +7,10 @@
     <TextView
         android:id="@+id/number_of_tasks" android:layout_width="0dp" android:textAllCaps="true"
         android:layout_weight="48" android:layout_height="match_parent"
-        android:textSize="16sp" android:textColor="@color/colorGrey" android:textStyle="bold" android:gravity="center_vertical"/>
+        android:textSize="16sp" android:textColor="@color/colorSecondaryText" android:textStyle="bold" android:gravity="center_vertical"/>
     <Button
         android:text="@string/button_show_closed_tasks"
         android:background="?android:attr/selectableItemBackground"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" android:id="@+id/button2" android:textColor="@color/colorRed"/>
+        android:layout_height="wrap_content" android:id="@+id/button2" android:textColor="@color/colorActionText"/>
 </LinearLayout>

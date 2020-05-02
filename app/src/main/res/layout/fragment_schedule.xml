@@ -20,7 +20,7 @@
         android:layout_marginTop="15dp"
         android:background="?android:attr/selectableItemBackground"
         android:text="@string/button_logout"
-        android:textColor="@color/colorGrey"
+        android:textColor="@color/colorSecondaryText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
     <android.support.v7.widget.RecyclerView
