@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Motive</string>
-    <string name="app_slogan">Победи лень</string>
+    <string name="app_slogan">Минималистичный список дел</string>
     <string name="title_tasks">Задачи</string>
     <plurals name="subtitle_tasks_section">
         <item quantity="one">%d задача</item>
